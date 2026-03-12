@@ -95,9 +95,72 @@ const TerminalWindow = () => {
   );
 };
 
+const MatrixRain = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let animId: number;
+    const chars = "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン";
+    const fontSize = 14;
+    let columns: number;
+    let drops: number[];
+
+    const resize = () => {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+      columns = Math.floor(canvas.width / fontSize);
+      drops = Array(columns).fill(1).map(() => Math.random() * -50);
+    };
+
+    resize();
+    window.addEventListener("resize", resize);
+
+    const draw = () => {
+      ctx.fillStyle = "rgba(8, 10, 15, 0.08)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "hsl(174 100% 50% / 0.12)";
+      ctx.font = `${fontSize}px monospace`;
+
+      for (let i = 0; i < columns; i++) {
+        const char = chars[Math.floor(Math.random() * chars.length)];
+        ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.98) {
+          drops[i] = 0;
+        }
+        drops[i] += 0.4;
+      }
+      animId = requestAnimationFrame(draw);
+    };
+
+    draw();
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener("resize", resize);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />;
+};
+
 const TrustSection = () => (
-  <section className="py-24 lg:py-32">
-    <div className="container mx-auto px-4">
+  <section className="relative py-24 lg:py-32 overflow-hidden">
+    {/* Matrix rain */}
+    <MatrixRain />
+    {/* Grid overlay */}
+    <div
+      className="absolute inset-0 pointer-events-none opacity-[0.04]"
+      style={{
+        backgroundImage:
+          "linear-gradient(hsl(174 100% 50%) 1px, transparent 1px), linear-gradient(90deg, hsl(174 100% 50%) 1px, transparent 1px)",
+        backgroundSize: "60px 60px",
+      }}
+    />
+    <div className="relative z-10 container mx-auto px-4">
       {/* Security Banner */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
