@@ -1,11 +1,9 @@
 import { motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Clock } from "lucide-react";
 import portfolioFintech from "@/assets/portfolio-fintech.jpg";
 import portfolioEcommerce from "@/assets/portfolio-ecommerce.jpg";
-import portfolioSecurity from "@/assets/portfolio-security.jpg";
-import portfolioSaas from "@/assets/portfolio-saas.jpg";
 
-const projects = [
+const featuredProjects = [
   {
     image: portfolioFintech,
     category: "Build & Experience",
@@ -30,30 +28,6 @@ const projects = [
     ],
     tech: ["React", "Python", "FastAPI"],
   },
-  {
-    image: portfolioSecurity,
-    category: "Defense & Security",
-    title: "CyberVault EASM Suite",
-    description: "Enterprise attack surface management platform monitoring 10K+ assets across 30 organizations.",
-    metrics: [
-      { label: "Threats Found", value: "12K+" },
-      { label: "MTTR", value: "< 4hrs" },
-      { label: "Coverage", value: "98%" },
-    ],
-    tech: ["Go", "Python", "Docker"],
-  },
-  {
-    image: portfolioSaas,
-    category: "Growth & Intelligence",
-    title: "ScaleOS Marketing Hub",
-    description: "Unified marketing automation platform with AI-driven campaign optimization and real-time attribution.",
-    metrics: [
-      { label: "ROAS", value: "5.2x" },
-      { label: "Campaigns", value: "800+" },
-      { label: "Cost Saved", value: "60%" },
-    ],
-    tech: ["Next.js", "FastAPI", "ClickHouse"],
-  },
 ];
 
 const PortfolioSection = () => (
@@ -70,8 +44,8 @@ const PortfolioSection = () => (
         <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Case Studies</h2>
       </motion.div>
 
-      <div className="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
-        {projects.map((project, i) => (
+      <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+        {featuredProjects.map((project, i) => (
           <motion.div
             key={project.title}
             initial={{ opacity: 0, y: 30 }}
@@ -122,6 +96,19 @@ const PortfolioSection = () => (
             </div>
           </motion.div>
         ))}
+
+        {/* Coming Soon Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="bg-card/50 border border-border/50 border-dashed rounded-lg p-6 flex flex-col items-center justify-center min-h-[320px]"
+        >
+          <Clock className="text-muted-foreground/40 mb-4" size={32} />
+          <p className="text-muted-foreground font-mono text-sm">More case studies</p>
+          <p className="text-muted-foreground/60 text-xs mt-1">Coming soon</p>
+        </motion.div>
       </div>
     </div>
   </section>

@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
-import { Cpu, Gauge, BarChart3, Zap, Lock, Globe } from "lucide-react";
+import { Cpu, Gauge, Lock, Clock } from "lucide-react";
 
-const labItems = [
+const featuredLabs = [
   {
     icon: Cpu,
     name: "NeuralAds Engine",
@@ -23,27 +23,6 @@ const labItems = [
     impact: "98% Threat Coverage",
     span: "",
   },
-  {
-    icon: BarChart3,
-    name: "InsightFlow",
-    description: "Real-time analytics dashboard with AI anomaly detection.",
-    impact: "60% Faster Decisions",
-    span: "md:col-span-2",
-  },
-  {
-    icon: Zap,
-    name: "EdgeWorker",
-    description: "Serverless compute at the edge for sub-50ms responses.",
-    impact: "47ms Avg Response",
-    span: "",
-  },
-  {
-    icon: Globe,
-    name: "LocaleAI",
-    description: "AI-driven localization and content adaptation engine.",
-    impact: "30+ Languages",
-    span: "md:col-span-2",
-  },
 ];
 
 const LabsSection = () => (
@@ -60,8 +39,8 @@ const LabsSection = () => (
         <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Internal Tools & Experiments</h2>
       </motion.div>
 
-      <div className="grid md:grid-cols-3 gap-4 max-w-6xl mx-auto">
-        {labItems.map((item, i) => (
+      <div className="grid md:grid-cols-3 gap-4 max-w-5xl mx-auto">
+        {featuredLabs.map((item, i) => (
           <motion.div
             key={item.name}
             initial={{ opacity: 0, y: 20 }}
@@ -86,6 +65,19 @@ const LabsSection = () => (
             </div>
           </motion.div>
         ))}
+
+        {/* Coming Soon Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.4, delay: 0.3 }}
+          className="relative bg-card/50 border border-border/50 border-dashed rounded-lg p-6 flex flex-col items-center justify-center min-h-[180px]"
+        >
+          <Clock className="text-muted-foreground/40 mb-3" size={24} />
+          <p className="text-muted-foreground font-mono text-xs">More experiments</p>
+          <p className="text-muted-foreground/60 text-[10px] mt-1">Coming soon</p>
+        </motion.div>
       </div>
     </div>
   </section>

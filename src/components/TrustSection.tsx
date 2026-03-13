@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck, Quote } from "lucide-react";
 
 const techStack = ["Go", "Python", "Next.js", "FastAPI", "ClickHouse", "React", "Tailwind", "Docker"];
 
@@ -23,6 +23,27 @@ const scanLines = [
   { delay: 8000, text: "  ║  SCAN COMPLETE — SECURITY SCORE: 97/100  ║", type: "result" },
   { delay: 8200, text: "  ║  Status: HARDENED  |  Threats: 0 CRITICAL ║", type: "result" },
   { delay: 8400, text: "  ╚══════════════════════════════════════════╝", type: "result" },
+];
+
+const testimonials = [
+  {
+    quote: "Tenazity transformed our platform in 6 weeks. Zero vulnerabilities, 3x performance gain.",
+    author: "Sarah Chen",
+    role: "CTO",
+    company: "FinEdge Analytics",
+  },
+  {
+    quote: "The most security-conscious dev team I've worked with. Every deliverable exceeded expectations.",
+    author: "Marcus Webb",
+    role: "VP Engineering",
+    company: "CyberVault",
+  },
+  {
+    quote: "Our conversion rate jumped 210% after the redesign. They understand growth, not just code.",
+    author: "Elena Rossi",
+    role: "Head of Growth",
+    company: "LuxMarket",
+  },
 ];
 
 const TerminalWindow = () => {
@@ -199,6 +220,43 @@ const TrustSection = () => (
         className="mb-20"
       >
         <TerminalWindow />
+      </motion.div>
+
+      {/* Testimonials */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="mb-20"
+      >
+        <div className="text-center mb-12">
+          <Quote className="mx-auto text-primary/60 mb-4" size={32} />
+          <h3 className="text-xl md:text-2xl font-bold">What Clients Say</h3>
+        </div>
+        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          {testimonials.map((t, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: i * 0.1 }}
+              className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg p-6"
+            >
+              <p className="text-sm text-foreground/90 leading-relaxed mb-4 italic">"{t.quote}"</p>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+                  <span className="text-xs font-semibold text-primary">{t.author.charAt(0)}</span>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">{t.author}</p>
+                  <p className="text-xs text-muted-foreground">{t.role}, {t.company}</p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </motion.div>
 
       {/* Tech Stack Marquee */}
