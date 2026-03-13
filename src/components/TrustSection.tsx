@@ -222,42 +222,8 @@ const TrustSection = () => (
         <TerminalWindow />
       </motion.div>
 
-      {/* Testimonials */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="mb-20"
-      >
-        <div className="text-center mb-12">
-          <Quote className="mx-auto text-primary/60 mb-4" size={32} />
-          <h3 className="text-xl md:text-2xl font-bold">What Clients Say</h3>
-        </div>
-        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          {testimonials.map((t, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.1 }}
-              className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg p-6"
-            >
-              <p className="text-sm text-foreground/90 leading-relaxed mb-4 italic">"{t.quote}"</p>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
-                  <span className="text-xs font-semibold text-primary">{t.author.charAt(0)}</span>
-                </div>
-                <div>
-                  <p className="text-sm font-medium">{t.author}</p>
-                  <p className="text-xs text-muted-foreground">{t.role}, {t.company}</p>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </motion.div>
+      {/* Testimonials Carousel */}
+      <TestimonialCarousel />
 
       {/* Tech Stack Marquee */}
       <motion.div
