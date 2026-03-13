@@ -160,6 +160,20 @@ const TrustSection = () => (
         backgroundSize: "60px 60px",
       }}
     />
+    {/* CRT Scan lines */}
+    <div
+      className="absolute inset-0 pointer-events-none opacity-[0.03]"
+      style={{
+        backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, hsl(174 100% 50%) 2px, hsl(174 100% 50%) 4px)",
+      }}
+    />
+    {/* Vignette */}
+    <div
+      className="absolute inset-0 pointer-events-none"
+      style={{
+        background: "radial-gradient(ellipse at center, transparent 0%, transparent 50%, hsl(220 20% 4% / 0.4) 100%)",
+      }}
+    />
     <div className="relative z-10 container mx-auto px-4">
       {/* Security Banner */}
       <motion.div
