@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
-import { ShieldCheck, Quote } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ShieldCheck, Quote, ChevronLeft, ChevronRight } from "lucide-react";
 
 const techStack = ["Go", "Python", "Next.js", "FastAPI", "ClickHouse", "React", "Tailwind", "Docker"];
 
