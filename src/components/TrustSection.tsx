@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
-import { ShieldCheck, Quote } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ShieldCheck, Quote, ChevronLeft, ChevronRight } from "lucide-react";
 
 const techStack = ["Go", "Python", "Next.js", "FastAPI", "ClickHouse", "React", "Tailwind", "Docker"];
 
@@ -168,6 +168,92 @@ const MatrixRain = () => {
   return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />;
 };
 
+const TestimonialCarousel = () => {
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActive((prev) => (prev + 1) % testimonials.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const prev = () => setActive((a) => (a - 1 + testimonials.length) % testimonials.length);
+  const next = () => setActive((a) => (a + 1) % testimonials.length);
+
+  const t = testimonials[active];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+      className="mb-20"
+    >
+      <div className="text-center mb-10">
+        <Quote className="mx-auto text-primary/60 mb-4" size={32} />
+        <h3 className="text-xl md:text-2xl font-bold">What Clients Say</h3>
+      </div>
+
+      <div className="max-w-2xl mx-auto relative">
+        <button
+          onClick={prev}
+          className="absolute -left-4 md:-left-12 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/30 transition-colors"
+          aria-label="Previous testimonial"
+        >
+          <ChevronLeft size={16} />
+        </button>
+        <button
+          onClick={next}
+          className="absolute -right-4 md:-right-12 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/30 transition-colors"
+          aria-label="Next testimonial"
+        >
+          <ChevronRight size={16} />
+        </button>
+
+        <div className="overflow-hidden rounded-lg border border-border/50 bg-card/50 backdrop-blur-sm p-8 md:p-10 min-h-[180px] flex flex-col items-center justify-center text-center">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={active}
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -30 }}
+              transition={{ duration: 0.35 }}
+            >
+              <p className="text-base md:text-lg text-foreground/90 leading-relaxed mb-6 italic">
+                &ldquo;{t.quote}&rdquo;
+              </p>
+              <div className="flex items-center justify-center gap-3">
+                <div className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center">
+                  <span className="text-sm font-semibold text-primary">{t.author.charAt(0)}</span>
+                </div>
+                <div className="text-left">
+                  <p className="text-sm font-medium">{t.author}</p>
+                  <p className="text-xs text-muted-foreground">{t.role}, {t.company}</p>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        <div className="flex justify-center gap-2 mt-5">
+          {testimonials.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setActive(i)}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                i === active ? "bg-primary w-6" : "bg-muted-foreground/30 w-2 hover:bg-muted-foreground/50"
+              }`}
+              aria-label={`Go to testimonial ${i + 1}`}
+            />
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
 const TrustSection = () => (
   <section className="relative py-24 lg:py-32 overflow-hidden">
     {/* Matrix rain */}
@@ -222,42 +308,8 @@ const TrustSection = () => (
         <TerminalWindow />
       </motion.div>
 
-      {/* Testimonials */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="mb-20"
-      >
-        <div className="text-center mb-12">
-          <Quote className="mx-auto text-primary/60 mb-4" size={32} />
-          <h3 className="text-xl md:text-2xl font-bold">What Clients Say</h3>
-        </div>
-        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          {testimonials.map((t, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.1 }}
-              className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg p-6"
-            >
-              <p className="text-sm text-foreground/90 leading-relaxed mb-4 italic">"{t.quote}"</p>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
-                  <span className="text-xs font-semibold text-primary">{t.author.charAt(0)}</span>
-                </div>
-                <div>
-                  <p className="text-sm font-medium">{t.author}</p>
-                  <p className="text-xs text-muted-foreground">{t.role}, {t.company}</p>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </motion.div>
+      {/* Testimonials Carousel */}
+      <TestimonialCarousel />
 
       {/* Tech Stack Marquee */}
       <motion.div
