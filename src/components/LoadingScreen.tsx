@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const phases = [
@@ -6,6 +6,63 @@ const phases = [
   { word: "Scale.", progress: 66 },
   { word: "Secure.", progress: 100 },
 ];
+
+const CHAR_SET = "01アイウエオカキクケコサシスセソタチツテトナニヌネノ{}[]<>/=";
+const COL_COUNT = 40;
+
+const MatrixRain = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const draw = useCallback((ctx: CanvasRenderingContext2D, w: number, h: number, drops: number[]) => {
+    ctx.fillStyle = "rgba(8, 10, 14, 0.12)";
+    ctx.fillRect(0, 0, w, h);
+
+    const fontSize = 14;
+    const cols = Math.floor(w / fontSize);
+
+    // Use CSS variable color via computed style
+    ctx.fillStyle = "hsl(174 100% 50% / 0.35)";
+    ctx.font = `${fontSize}px "JetBrains Mono", monospace`;
+
+    for (let i = 0; i < cols; i++) {
+      const char = CHAR_SET[Math.floor(Math.random() * CHAR_SET.length)];
+      ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+
+      if (drops[i] * fontSize > h && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener("resize", resize);
+
+    const fontSize = 14;
+    const cols = Math.floor(canvas.width / fontSize);
+    const drops = Array.from({ length: cols }, () => Math.random() * -50);
+
+    const id = setInterval(() => draw(ctx, canvas.width, canvas.height, drops), 50);
+
+    return () => {
+      clearInterval(id);
+      window.removeEventListener("resize", resize);
+    };
+  }, [draw]);
+
+  return <canvas ref={canvasRef} className="absolute inset-0 z-0" />;
+};
 
 const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
   const [phase, setPhase] = useState(0);
@@ -29,6 +86,9 @@ const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
           exit={{ opacity: 0, scale: 1.05 }}
           transition={{ duration: 0.6, ease: "easeInOut" }}
         >
+          {/* Matrix rain */}
+          <MatrixRain />
+
           {/* Grid pattern background */}
           <div className="absolute inset-0 opacity-[0.03]" style={{
             backgroundImage: `linear-gradient(hsl(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)`,
