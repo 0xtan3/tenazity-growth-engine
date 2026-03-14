@@ -28,6 +28,16 @@ const pillars = [
   },
 ];
 
+const container = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.15 } },
+};
+
+const cardVariant = {
+  hidden: { opacity: 0, y: 40, scale: 0.95 },
+  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: "easeOut" } },
+};
+
 const PillarsSection = () => (
   <section id="services" className="py-24 lg:py-32">
     <div className="container mx-auto px-4">
@@ -42,14 +52,17 @@ const PillarsSection = () => (
         <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Three Pillars of Growth</h2>
       </motion.div>
 
-      <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-        {pillars.map((p, i) => (
+      <motion.div
+        variants={container}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-80px" }}
+        className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto"
+      >
+        {pillars.map((p) => (
           <motion.div
             key={p.title}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.5, delay: i * 0.15 }}
+            variants={cardVariant}
             className="group relative bg-card rounded-lg border border-border p-8 hover:border-primary/40 transition-all duration-500 hover:glow-box"
           >
             <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
@@ -69,7 +82,7 @@ const PillarsSection = () => (
             </p>
           </motion.div>
         ))}
-      </div>
+      </motion.div>
     </div>
   </section>
 );

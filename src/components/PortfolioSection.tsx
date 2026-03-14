@@ -30,6 +30,16 @@ const featuredProjects = [
   },
 ];
 
+const container = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.15 } },
+};
+
+const cardVariant = {
+  hidden: { opacity: 0, y: 40, scale: 0.97 },
+  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.55, ease: "easeOut" } },
+};
+
 const PortfolioSection = () => (
   <section id="portfolio" className="py-24 lg:py-32">
     <div className="container mx-auto px-4">
@@ -44,17 +54,19 @@ const PortfolioSection = () => (
         <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Case Studies</h2>
       </motion.div>
 
-      <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-        {featuredProjects.map((project, i) => (
+      <motion.div
+        variants={container}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-60px" }}
+        className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto"
+      >
+        {featuredProjects.map((project) => (
           <motion.div
             key={project.title}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.5, delay: i * 0.1 }}
+            variants={cardVariant}
             className="group bg-card rounded-lg border border-border overflow-hidden hover:border-primary/30 transition-all duration-500 hover:glow-box"
           >
-            {/* Image */}
             <div className="relative h-48 overflow-hidden">
               <img
                 src={project.image}
@@ -70,12 +82,10 @@ const PortfolioSection = () => (
               </div>
             </div>
 
-            {/* Content */}
             <div className="p-6">
               <h3 className="text-lg font-semibold mb-2">{project.title}</h3>
               <p className="text-sm text-muted-foreground mb-5 leading-relaxed">{project.description}</p>
 
-              {/* Metrics */}
               <div className="grid grid-cols-3 gap-3 mb-5">
                 {project.metrics.map((m) => (
                   <div key={m.label} className="bg-secondary/50 rounded-md p-3 text-center">
@@ -85,7 +95,6 @@ const PortfolioSection = () => (
                 ))}
               </div>
 
-              {/* Tech */}
               <div className="flex gap-2">
                 {project.tech.map((t) => (
                   <span key={t} className="text-[10px] font-mono text-muted-foreground bg-secondary border border-border rounded px-2 py-0.5">
@@ -99,17 +108,14 @@ const PortfolioSection = () => (
 
         {/* Coming Soon Card */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          variants={cardVariant}
           className="bg-card/50 border border-border/50 border-dashed rounded-lg p-6 flex flex-col items-center justify-center min-h-[320px]"
         >
           <Clock className="text-muted-foreground/40 mb-4" size={32} />
           <p className="text-muted-foreground font-mono text-sm">More case studies</p>
           <p className="text-muted-foreground/60 text-xs mt-1">Coming soon</p>
         </motion.div>
-      </div>
+      </motion.div>
     </div>
   </section>
 );

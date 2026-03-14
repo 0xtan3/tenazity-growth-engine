@@ -25,6 +25,16 @@ const featuredLabs = [
   },
 ];
 
+const container = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.12 } },
+};
+
+const cardVariant = {
+  hidden: { opacity: 0, y: 30, scale: 0.96 },
+  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.45, ease: "easeOut" } },
+};
+
 const LabsSection = () => (
   <section id="labs" className="py-24 lg:py-32 bg-secondary/30">
     <div className="container mx-auto px-4">
@@ -39,14 +49,17 @@ const LabsSection = () => (
         <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Internal Tools & Experiments</h2>
       </motion.div>
 
-      <div className="grid md:grid-cols-3 gap-4 max-w-5xl mx-auto">
-        {featuredLabs.map((item, i) => (
+      <motion.div
+        variants={container}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-60px" }}
+        className="grid md:grid-cols-3 gap-4 max-w-5xl mx-auto"
+      >
+        {featuredLabs.map((item) => (
           <motion.div
             key={item.name}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.4, delay: i * 0.1 }}
+            variants={cardVariant}
             className={`relative bg-card rounded-lg border border-border p-6 hover:border-primary/30 transition-all duration-300 group ${item.span}`}
           >
             <div className="flex items-start justify-between mb-4">
@@ -68,17 +81,14 @@ const LabsSection = () => (
 
         {/* Coming Soon Card */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.4, delay: 0.3 }}
+          variants={cardVariant}
           className="relative bg-card/50 border border-border/50 border-dashed rounded-lg p-6 flex flex-col items-center justify-center min-h-[180px]"
         >
           <Clock className="text-muted-foreground/40 mb-3" size={24} />
           <p className="text-muted-foreground font-mono text-xs">More experiments</p>
           <p className="text-muted-foreground/60 text-[10px] mt-1">Coming soon</p>
         </motion.div>
-      </div>
+      </motion.div>
     </div>
   </section>
 );
