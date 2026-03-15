@@ -59,6 +59,21 @@
     @apply bg-background text-foreground font-sans antialiased;
   }
 
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      hsl(var(--background) / 0.03) 2px,
+      hsl(var(--background) / 0.03) 4px
+    );
+  }
+
   html {
     scroll-behavior: smooth;
   }
