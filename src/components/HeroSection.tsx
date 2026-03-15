@@ -34,7 +34,7 @@ const HeroSection = () => (
         Growth Operating System
       </motion.p>
       <motion.h1 variants={fadeUp} className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-none mb-6">
-        Build. <span className="text-primary glow-text">Scale.</span> Secure.
+        Build. <span className="text-primary glow-text glitch-text" data-text="Scale.">Scale.</span> Secure.
       </motion.h1>
       <motion.p variants={fadeUp} className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
         The Growth Operating System for modern businesses. We integrate AI-driven marketing,
