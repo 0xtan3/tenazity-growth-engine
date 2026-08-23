@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,47 +6,44 @@
 
 @layer base {
   :root {
-    --background: 220 20% 4%;
-    --foreground: 180 10% 92%;
+    --background: 228 14% 5%;
+    --foreground: 220 10% 94%;
 
-    --card: 220 18% 7%;
-    --card-foreground: 180 10% 92%;
+    --card: 228 12% 8%;
+    --card-foreground: 220 10% 94%;
 
-    --popover: 220 18% 7%;
-    --popover-foreground: 180 10% 92%;
+    --popover: 228 12% 8%;
+    --popover-foreground: 220 10% 94%;
 
-    --primary: 174 100% 50%;
-    --primary-foreground: 220 20% 4%;
+    --primary: 245 58% 64%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 14% 12%;
-    --secondary-foreground: 180 10% 80%;
+    --secondary: 228 10% 12%;
+    --secondary-foreground: 220 10% 75%;
 
-    --muted: 220 14% 14%;
-    --muted-foreground: 220 10% 50%;
+    --muted: 228 10% 14%;
+    --muted-foreground: 225 8% 45%;
 
-    --accent: 174 100% 50%;
-    --accent-foreground: 220 20% 4%;
+    --accent: 245 58% 64%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 14% 16%;
-    --input: 220 14% 16%;
-    --ring: 174 100% 50%;
+    --border: 228 10% 14%;
+    --input: 228 10% 14%;
+    --ring: 245 58% 64%;
 
-    --radius: 0.5rem;
+    --radius: 0.625rem;
 
-    --glow-primary: 0 0 40px hsl(174 100% 50% / 0.15);
-    --glow-strong: 0 0 60px hsl(174 100% 50% / 0.25);
-
-    --sidebar-background: 220 18% 6%;
-    --sidebar-foreground: 180 10% 92%;
-    --sidebar-primary: 174 100% 50%;
-    --sidebar-primary-foreground: 220 20% 4%;
-    --sidebar-accent: 220 14% 12%;
-    --sidebar-accent-foreground: 180 10% 80%;
-    --sidebar-border: 220 14% 16%;
-    --sidebar-ring: 174 100% 50%;
+    --sidebar-background: 228 12% 6%;
+    --sidebar-foreground: 220 10% 94%;
+    --sidebar-primary: 245 58% 64%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 228 10% 12%;
+    --sidebar-accent-foreground: 220 10% 75%;
+    --sidebar-border: 228 10% 14%;
+    --sidebar-ring: 245 58% 64%;
   }
 }
 
@@ -59,60 +56,74 @@
     @apply bg-background text-foreground font-sans antialiased;
   }
 
-  body::after {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Selection color */
+  ::selection {
+    background: hsl(245 58% 64% / 0.3);
+    color: hsl(0 0% 100%);
+  }
+}
+
+@layer utilities {
+  /* Subtle noise texture overlay */
+  .noise-overlay::before {
     content: '';
     position: fixed;
     inset: 0;
     z-index: 9999;
     pointer-events: none;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      hsl(var(--background) / 0.03) 2px,
-      hsl(var(--background) / 0.03) 4px
-    );
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   }
 
-  html {
-    scroll-behavior: smooth;
-  }
-}
-
-@layer utilities {
-  .glow-box {
-    box-shadow: var(--glow-primary);
+  /* Gradient mesh background for hero */
+  .gradient-mesh {
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 40%, hsl(245 58% 64% / 0.08) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 40% at 80% 20%, hsl(280 60% 50% / 0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 60% at 50% 80%, hsl(220 60% 40% / 0.04) 0%, transparent 70%);
   }
 
-  .glow-box-strong {
-    box-shadow: var(--glow-strong);
+  /* Subtle glow for interactive elements */
+  .glow-subtle {
+    box-shadow: 0 0 40px -10px hsl(var(--primary) / 0.15);
   }
 
-  .glow-text {
-    text-shadow: 0 0 20px hsl(174 100% 50% / 0.5);
+  /* Glass card effect */
+  .glass-card {
+    background: hsl(228 12% 8% / 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid hsl(228 10% 18% / 0.5);
   }
 
-  .gradient-border {
-    border: 1px solid transparent;
-    background-clip: padding-box;
-    position: relative;
+  /* Dot grid pattern */
+  .dot-grid {
+    background-image: radial-gradient(circle, hsl(225 8% 45% / 0.15) 1px, transparent 1px);
+    background-size: 24px 24px;
   }
 
-  .gradient-border::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(135deg, hsl(174 100% 50% / 0.3), transparent 50%);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
+  /* Gradient text */
+  .text-gradient {
+    background: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(225 8% 55%) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
+  .text-gradient-accent {
+    background: linear-gradient(135deg, hsl(245 58% 70%) 0%, hsl(280 60% 65%) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Marquee animation */
   .marquee {
-    animation: marquee 30s linear infinite;
+    animation: marquee 40s linear infinite;
   }
 
   @keyframes marquee {
@@ -120,74 +131,35 @@
     100% { transform: translateX(-50%); }
   }
 
-  @keyframes pulse-glow {
-    0%, 100% { opacity: 0.4; }
-    50% { opacity: 1; }
+  /* Fade in animation utility */
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
-  .animate-pulse-glow {
-    animation: pulse-glow 3s ease-in-out infinite;
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s ease-out forwards;
   }
 
-  .glitch-text {
-    position: relative;
-    display: inline-block;
+  /* Divider line gradient */
+  .divider-gradient {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, hsl(228 10% 20%), transparent);
   }
 
-  .glitch-text::before,
-  .glitch-text::after {
-    content: attr(data-text);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    opacity: 0.8;
+  /* Marquee animation */
+  @keyframes marquee {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-33.33%); }
   }
 
-  .glitch-text::before {
-    color: hsl(174 100% 60%);
-    animation: glitch-1 2.5s infinite linear alternate-reverse;
-    clip-path: inset(0 0 60% 0);
-  }
-
-  .glitch-text::after {
-    color: hsl(0 100% 60%);
-    animation: glitch-2 2.5s infinite linear alternate-reverse;
-    clip-path: inset(60% 0 0 0);
-  }
-
-  @keyframes glitch-1 {
-    0%, 80% { transform: translate(0); opacity: 0; }
-    81% { transform: translate(-4px, 2px); opacity: 0.8; }
-    82% { transform: translate(3px, -1px); opacity: 0.8; }
-    83% { transform: translate(-2px, 3px); opacity: 0.8; }
-    84% { transform: translate(5px, -2px); opacity: 0.8; }
-    85% { transform: translate(-3px, 1px); opacity: 0.8; }
-    86% { transform: translate(0); opacity: 0; }
-    87%, 94% { transform: translate(0); opacity: 0; }
-    95% { transform: translate(3px, -2px); opacity: 0.8; }
-    96% { transform: translate(-5px, 1px); opacity: 0.8; }
-    97% { transform: translate(2px, 3px); opacity: 0.8; }
-    98% { transform: translate(-4px, -1px); opacity: 0.8; }
-    99% { transform: translate(0); opacity: 0; }
-    100% { transform: translate(0); opacity: 0; }
-  }
-
-  @keyframes glitch-2 {
-    0%, 75% { transform: translate(0); opacity: 0; }
-    76% { transform: translate(4px, -2px); opacity: 0.8; }
-    77% { transform: translate(-3px, 3px); opacity: 0.8; }
-    78% { transform: translate(5px, 1px); opacity: 0.8; }
-    79% { transform: translate(-2px, -3px); opacity: 0.8; }
-    80% { transform: translate(0); opacity: 0; }
-    81%, 90% { transform: translate(0); opacity: 0; }
-    91% { transform: translate(-4px, 2px); opacity: 0.8; }
-    92% { transform: translate(3px, -3px); opacity: 0.8; }
-    93% { transform: translate(-5px, 1px); opacity: 0.8; }
-    94% { transform: translate(4px, -1px); opacity: 0.8; }
-    95% { transform: translate(0); opacity: 0; }
-    96%, 100% { transform: translate(0); opacity: 0; }
+  .animate-marquee {
+    animation: marquee 25s linear infinite;
   }
 }

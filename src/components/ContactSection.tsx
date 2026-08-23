@@ -1,112 +1,178 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { ArrowRight, Rocket, Code2, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-
-const goals = [
-  { id: "growth", label: "Growth", icon: Rocket, desc: "Scale my business with AI-driven marketing" },
-  { id: "building", label: "Building", icon: Code2, desc: "Build a high-performance web application" },
-  { id: "security", label: "Security", icon: ShieldCheck, desc: "Secure and protect my digital assets" },
-];
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 
 const ContactSection = () => {
-  const [step, setStep] = useState(1);
-  const [goal, setGoal] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [focusedInput, setFocusedInput] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
-  if (submitted) {
-    return (
-      <section id="contact" className="py-24 lg:py-32 bg-secondary/30">
-        <div className="container mx-auto px-4 text-center">
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
-            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
-              <Rocket className="text-primary" size={28} />
-            </div>
-            <h3 className="text-2xl font-bold mb-2">Message Sent!</h3>
-            <p className="text-muted-foreground">We'll get back to you within 24 hours.</p>
-          </motion.div>
-        </div>
-      </section>
-    );
-  }
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    // Simulate network request for now
+    // We will integrate direct email (e.g. EmailJS/Resend) later
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setIsSuccess(true);
+    }, 1200);
+  };
 
   return (
-    <section id="contact" className="py-24 lg:py-32 bg-secondary/30">
-      <div className="container mx-auto px-4 max-w-xl">
+    <section id="contact" className="py-24 lg:py-32 relative border-t border-border/40">
+      <div className="absolute inset-0 bg-secondary/10 pointer-events-none" />
+
+      <div className="container mx-auto px-4 relative z-10 max-w-xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.6 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.7 }}
           className="text-center mb-12"
         >
-          <p className="text-primary font-mono text-sm tracking-widest uppercase mb-3">Contact</p>
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Let's Talk</h2>
+          <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">
+            Let's build something.
+          </h2>
+          <p className="text-muted-foreground text-base md:text-lg font-light leading-relaxed">
+            Have a project in mind? Send us a message and we'll get back to you within 24 hours.
+          </p>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-card border border-border rounded-lg p-8"
-        >
-          {/* Progress */}
-          <div className="flex items-center gap-2 mb-8">
-            {[1, 2].map((s) => (
-              <div key={s} className={`h-1 flex-1 rounded-full transition-colors ${s <= step ? "bg-primary" : "bg-border"}`} />
-            ))}
-          </div>
+        <AnimatePresence mode="wait">
+          {!isSuccess ? (
+            <motion.div
+              key="form"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, filter: "blur(10px)" }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+            >
+              <form onSubmit={handleSubmit} className="space-y-8 bg-card/30 backdrop-blur-md border border-border/50 p-8 rounded-2xl">
+                
+                <div className="grid md:grid-cols-2 gap-8">
+                  {/* Floating Label Input: Name */}
+                  <div className="relative group">
+                    <input 
+                      type="text" 
+                      id="name"
+                      name="name"
+                      required
+                      className="peer w-full bg-transparent border-b border-border/60 py-3 text-foreground focus:outline-none focus:border-primary transition-colors"
+                      onFocus={() => setFocusedInput('name')}
+                      onBlur={(e) => setFocusedInput(e.target.value ? 'name' : null)}
+                    />
+                    <label 
+                      htmlFor="name" 
+                      className={`absolute left-0 transition-all duration-300 pointer-events-none text-muted-foreground ${
+                        focusedInput === 'name' || document.getElementById('name')?.matches(':valid') 
+                          ? "-top-4 text-xs text-primary" 
+                          : "top-3 text-base"
+                      }`}
+                    >
+                      Your Name
+                    </label>
+                  </div>
 
-          {step === 1 && (
-            <div>
-              <p className="text-sm text-muted-foreground mb-4">What is your primary goal?</p>
-              <div className="space-y-3">
-                {goals.map((g) => (
-                  <button
-                    key={g.id}
-                    onClick={() => { setGoal(g.id); setStep(2); }}
-                    className={`w-full flex items-center gap-4 p-4 rounded-lg border transition-all text-left ${
-                      goal === g.id ? "border-primary bg-primary/5" : "border-border hover:border-primary/30"
+                  {/* Floating Label Input: Email */}
+                  <div className="relative group">
+                    <input 
+                      type="email" 
+                      id="email"
+                      name="email"
+                      required
+                      className="peer w-full bg-transparent border-b border-border/60 py-3 text-foreground focus:outline-none focus:border-primary transition-colors"
+                      onFocus={() => setFocusedInput('email')}
+                      onBlur={(e) => setFocusedInput(e.target.value ? 'email' : null)}
+                    />
+                    <label 
+                      htmlFor="email" 
+                      className={`absolute left-0 transition-all duration-300 pointer-events-none text-muted-foreground ${
+                        focusedInput === 'email' || document.getElementById('email')?.matches(':valid') 
+                          ? "-top-4 text-xs text-primary" 
+                          : "top-3 text-base"
+                      }`}
+                    >
+                      Email Address
+                    </label>
+                  </div>
+                </div>
+
+                {/* Floating Label Textarea */}
+                <div className="relative group pt-2">
+                  <textarea 
+                    id="message"
+                    name="message"
+                    rows={4}
+                    required
+                    className="peer w-full bg-transparent border-b border-border/60 py-3 text-foreground focus:outline-none focus:border-primary transition-colors resize-none"
+                    onFocus={() => setFocusedInput('message')}
+                    onBlur={(e) => setFocusedInput(e.target.value ? 'message' : null)}
+                  />
+                  <label 
+                    htmlFor="message" 
+                    className={`absolute left-0 transition-all duration-300 pointer-events-none text-muted-foreground ${
+                      focusedInput === 'message' || document.getElementById('message')?.matches(':valid') 
+                        ? "-top-4 text-xs text-primary" 
+                        : "top-3 text-base"
                     }`}
                   >
-                    <div className="w-10 h-10 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0">
-                      <g.icon className="text-primary" size={18} />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold">{g.label}</p>
-                      <p className="text-xs text-muted-foreground">{g.desc}</p>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
+                    Project Details
+                  </label>
+                </div>
 
-          {step === 2 && (
-            <form
-              onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }}
-              className="space-y-4"
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="group w-full inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground px-8 py-4 rounded-xl font-medium text-sm transition-all duration-300 hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none"
+                  >
+                    {isSubmitting ? (
+                      <span className="flex items-center gap-2">
+                        <span className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                        Sending...
+                      </span>
+                    ) : (
+                      <>
+                        Send Message
+                        <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                      </>
+                    )}
+                  </button>
+                </div>
+                
+                <div className="text-center mt-6">
+                  <a href="mailto:hello@tenazity.com" className="text-xs text-muted-foreground/50 hover:text-foreground transition-colors">
+                    Or email us directly at hello@tenazity.com
+                  </a>
+                </div>
+              </form>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="success"
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ type: "spring", stiffness: 200, damping: 20 }}
+              className="h-64 flex flex-col items-center justify-center text-center bg-primary/5 border border-primary/10 rounded-2xl p-10"
             >
-              <div className="grid grid-cols-2 gap-4">
-                <Input placeholder="Name" required className="bg-secondary border-border" />
-                <Input placeholder="Email" type="email" required className="bg-secondary border-border" />
+              <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mb-4">
+                <CheckCircle2 className="text-primary" size={24} />
               </div>
-              <Input placeholder="Company" className="bg-secondary border-border" />
-              <Textarea placeholder="Tell us about your project..." rows={4} className="bg-secondary border-border resize-none" />
-              <div className="flex gap-3">
-                <Button type="button" variant="outline" onClick={() => setStep(1)} className="border-border">
-                  Back
-                </Button>
-                <Button type="submit" className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 glow-box font-semibold">
-                  Send Message <ArrowRight className="ml-2" size={16} />
-                </Button>
-              </div>
-            </form>
+              <h3 className="text-2xl font-bold mb-2">Message Sent</h3>
+              <p className="text-muted-foreground text-sm max-w-xs mx-auto mb-6">
+                Thanks for reaching out. We'll get back to you within 24 hours.
+              </p>
+              <button 
+                onClick={() => setIsSuccess(false)}
+                className="text-xs font-medium text-primary hover:underline underline-offset-4"
+              >
+                Send another message
+              </button>
+            </motion.div>
           )}
-        </motion.div>
+        </AnimatePresence>
       </div>
     </section>
   );

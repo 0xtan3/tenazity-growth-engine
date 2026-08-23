@@ -1,52 +1,70 @@
 import { motion } from "framer-motion";
-import { Cpu, Gauge, Lock, Clock } from "lucide-react";
+import { Hammer, Timer, Wrench, ArrowUpRight } from "lucide-react";
 
-const featuredLabs = [
+const labs = [
   {
-    icon: Cpu,
-    name: "NeuralAds Engine",
-    description: "AI-powered ad creative generator and A/B optimizer.",
-    impact: "3.2x Higher CTR",
-    span: "md:col-span-2",
+    icon: Hammer,
+    name: "Forge",
+    description:
+      "Our freelance studio OS — project management, time tracking, and invoicing in one clean interface.",
+    url: "https://forge.tenazity.com",
+    status: "Live",
   },
   {
-    icon: Gauge,
-    name: "VelocityCI",
-    description: "Zero-config CI/CD pipeline for fullstack apps.",
-    impact: "Reduced Latency by 40%",
-    span: "",
+    icon: Timer,
+    name: "Chrono",
+    description:
+      "A focus timer built for deep work. Clean UI, ambient sounds, and session analytics.",
+    url: "https://chrono.tenazity.com",
+    status: "Live",
   },
   {
-    icon: Lock,
-    name: "VaultScan",
-    description: "Automated EASM & vulnerability detection platform.",
-    impact: "98% Threat Coverage",
-    span: "",
+    icon: Wrench,
+    name: "More in progress",
+    description:
+      "We're always building. New tools and experiments are in the pipeline.",
+    url: null,
+    status: "Coming Soon",
   },
 ];
 
 const container = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.12 } },
+  show: { transition: { staggerChildren: 0.1 } },
 };
 
 const cardVariant = {
-  hidden: { opacity: 0, y: 30, scale: 0.96 },
-  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.45, ease: "easeOut" as const } },
+  hidden: { opacity: 0, y: 24 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] },
+  },
 };
 
 const LabsSection = () => (
-  <section id="labs" className="py-24 lg:py-32 bg-secondary/30">
-    <div className="container mx-auto px-4">
+  <section id="labs" className="py-24 lg:py-32 relative">
+    {/* Subtle background */}
+    <div className="absolute inset-0 bg-secondary/20" />
+
+    <div className="relative container mx-auto px-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6 }}
-        className="text-center mb-16"
+        transition={{ duration: 0.5 }}
+        className="mb-16"
       >
-        <p className="text-primary font-mono text-sm tracking-widest uppercase mb-3">Tenazity Labs</p>
-        <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Internal Tools & Experiments</h2>
+        <p className="text-primary text-sm font-medium tracking-wide uppercase mb-3">
+          Tenazity Labs
+        </p>
+        <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+          Built by us, for us.
+        </h2>
+        <p className="text-muted-foreground mt-3 max-w-lg text-sm leading-relaxed">
+          We practice what we preach. These are internal tools we've built to
+          solve our own problems — proof that we ship real products.
+        </p>
       </motion.div>
 
       <motion.div
@@ -54,40 +72,62 @@ const LabsSection = () => (
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: "-60px" }}
-        className="grid md:grid-cols-3 gap-4 max-w-5xl mx-auto"
+        className="grid sm:grid-cols-3 gap-4"
       >
-        {featuredLabs.map((item) => (
-          <motion.div
-            key={item.name}
-            variants={cardVariant}
-            className={`relative bg-card rounded-lg border border-border p-6 hover:border-primary/30 transition-all duration-300 group ${item.span}`}
-          >
-            <div className="flex items-start justify-between mb-4">
-              <div className="w-10 h-10 rounded-md bg-primary/10 flex items-center justify-center">
-                <item.icon className="text-primary" size={20} />
-              </div>
-              <span className="text-[10px] font-mono uppercase tracking-widest text-primary/60 bg-primary/5 border border-primary/10 rounded px-2 py-0.5">
-                Tool
-              </span>
-            </div>
-            <h3 className="text-base font-semibold mb-1">{item.name}</h3>
-            <p className="text-sm text-muted-foreground mb-4">{item.description}</p>
-            <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse-glow" />
-              <span className="text-xs font-mono text-primary">{item.impact}</span>
-            </div>
-          </motion.div>
-        ))}
+        {labs.map((item) => {
+          const Wrapper = item.url ? "a" : "div";
+          const linkProps = item.url
+            ? {
+                href: item.url,
+                target: "_blank" as const,
+                rel: "noopener noreferrer",
+              }
+            : {};
 
-        {/* Coming Soon Card */}
-        <motion.div
-          variants={cardVariant}
-          className="relative bg-card/50 border border-border/50 border-dashed rounded-lg p-6 flex flex-col items-center justify-center min-h-[180px]"
-        >
-          <Clock className="text-muted-foreground/40 mb-3" size={24} />
-          <p className="text-muted-foreground font-mono text-xs">More experiments</p>
-          <p className="text-muted-foreground/60 text-[10px] mt-1">Coming soon</p>
-        </motion.div>
+          return (
+            <motion.div key={item.name} variants={cardVariant}>
+              <Wrapper
+                {...linkProps}
+                className={`group block bg-card/50 rounded-xl border border-border/50 p-6 transition-all duration-300 h-full ${
+                  item.url
+                    ? "hover:border-primary/20 hover:bg-card cursor-pointer"
+                    : "opacity-60"
+                }`}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-9 h-9 rounded-lg bg-primary/8 flex items-center justify-center">
+                    <item.icon className="text-primary/80" size={18} />
+                  </div>
+                  <span
+                    className={`inline-flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider rounded-full px-2.5 py-1 ${
+                      item.status === "Live"
+                        ? "text-emerald-400/80 bg-emerald-400/5 border border-emerald-400/10"
+                        : "text-muted-foreground/50 bg-secondary/50 border border-border/30"
+                    }`}
+                  >
+                    {item.status === "Live" && (
+                      <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
+                    )}
+                    {item.status}
+                  </span>
+                </div>
+
+                <h3 className="text-base font-semibold mb-1.5 flex items-center gap-2">
+                  {item.name}
+                  {item.url && (
+                    <ArrowUpRight
+                      className="text-muted-foreground/30 group-hover:text-primary/50 transition-colors"
+                      size={14}
+                    />
+                  )}
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {item.description}
+                </p>
+              </Wrapper>
+            </motion.div>
+          );
+        })}
       </motion.div>
     </div>
   </section>

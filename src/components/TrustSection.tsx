@@ -1,340 +1,170 @@
-import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ShieldCheck, Quote, ChevronLeft, ChevronRight } from "lucide-react";
+import { motion } from "framer-motion";
+import { Shield, Zap, Palette, Terminal, Server, ArrowRight } from "lucide-react";
+import { useState } from "react";
 
-const techStack = ["Go", "Python", "Next.js", "FastAPI", "ClickHouse", "React", "Tailwind", "Docker"];
-
-const scanLines = [
-  { delay: 0, text: "$ tenazity-scan --target *.tenazity.dev --mode deep", type: "cmd" },
-  { delay: 600, text: "[INFO]  Initializing EASM engine v3.2.1...", type: "info" },
-  { delay: 1200, text: "[INFO]  Enumerating subdomains............. 47 found", type: "info" },
-  { delay: 1900, text: "[INFO]  Port scanning 47 hosts (TCP/UDP).. done", type: "info" },
-  { delay: 2500, text: "[SCAN]  Running CVE database match......... 142,891 signatures", type: "scan" },
-  { delay: 3200, text: "[SCAN]  TLS certificate audit.............. ✓ all valid", type: "pass" },
-  { delay: 3800, text: "[SCAN]  Header security analysis........... ✓ HSTS, CSP, X-Frame", type: "pass" },
-  { delay: 4300, text: "[SCAN]  SQL injection vectors.............. 0 found", type: "pass" },
-  { delay: 4800, text: "[SCAN]  XSS attack surface................. 0 found", type: "pass" },
-  { delay: 5300, text: "[SCAN]  Authentication bypass attempts..... 0 found", type: "pass" },
-  { delay: 5800, text: "[WARN]  Outdated dependency: lodash@4.17.20 → 4.17.21", type: "warn" },
-  { delay: 6400, text: "[SCAN]  API endpoint fuzzing............... 238 tested, 0 vulnerable", type: "pass" },
-  { delay: 7000, text: "[INFO]  Generating compliance report....... OWASP Top 10", type: "info" },
-  { delay: 7600, text: "", type: "blank" },
-  { delay: 7800, text: "  ╔══════════════════════════════════════════╗", type: "result" },
-  { delay: 8000, text: "  ║  SCAN COMPLETE — SECURITY SCORE: 97/100  ║", type: "result" },
-  { delay: 8200, text: "  ║  Status: HARDENED  |  Threats: 0 CRITICAL ║", type: "result" },
-  { delay: 8400, text: "  ╚══════════════════════════════════════════╝", type: "result" },
-];
-
-const testimonials = [
+const values = [
   {
-    quote: "Tenazity transformed our platform in 6 weeks. Zero vulnerabilities, 3x performance gain.",
-    author: "Sarah Chen",
-    role: "CTO",
-    company: "FinEdge Analytics",
+    icon: Zap,
+    title: "Performance & SEO First",
+    description:
+      "Every custom web app is optimized for speed and technical SEO. Fast load times, smooth interactions, and clean React code that scales effortlessly.",
   },
   {
-    quote: "The most security-conscious dev team I've worked with. Every deliverable exceeded expectations.",
-    author: "Marcus Webb",
-    role: "VP Engineering",
-    company: "CyberVault",
+    icon: Palette,
+    title: "Premium UI/UX Design",
+    description:
+      "We don't just make things look good — we design bespoke interfaces that guide users, build trust, and drive conversions for your freelance or agency business.",
   },
   {
-    quote: "Our conversion rate jumped 210% after the redesign. They understand growth, not just code.",
-    author: "Elena Rossi",
-    role: "Head of Growth",
-    company: "LuxMarket",
+    icon: Server,
+    title: "Scalable Architecture",
+    description:
+      "We build backend systems designed to grow with you. From database design to serverless APIs, our architecture handles high traffic with ease.",
+  },
+  {
+    icon: Terminal,
+    title: "Modern Tech Stack",
+    description:
+      "React, Next.js, TypeScript, Go, Python, Node — our web developers use battle-tested tools and stay current with industry standards.",
   },
 ];
 
-const TerminalWindow = () => {
-  const [visibleLines, setVisibleLines] = useState<number>(0);
-  const [started, setStarted] = useState(false);
-  const termRef = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+const techStack = [
+  "React",
+  "TypeScript",
+  "Next.js",
+  "Tailwind CSS",
+  "Go",
+  "Python",
+  "FastAPI",
+  "Docker",
+  "PostgreSQL",
+  "Framer Motion",
+];
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !started) setStarted(true);
-      },
-      { threshold: 0.3 }
-    );
-    if (containerRef.current) observer.observe(containerRef.current);
-    return () => observer.disconnect();
-  }, [started]);
+const container = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.12 } },
+};
 
-  useEffect(() => {
-    if (!started) return;
-    const timers = scanLines.map((line, i) =>
-      setTimeout(() => {
-        setVisibleLines(i + 1);
-        if (termRef.current) {
-          termRef.current.scrollTop = termRef.current.scrollHeight;
-        }
-      }, line.delay)
-    );
-    return () => timers.forEach(clearTimeout);
-  }, [started]);
+const itemVariant = {
+  hidden: { opacity: 0, x: -20 },
+  show: {
+    opacity: 1,
+    x: 0,
+    transition: { type: "spring", stiffness: 100, damping: 15 },
+  },
+};
 
-  const getLineColor = (type: string) => {
-    switch (type) {
-      case "cmd": return "text-primary";
-      case "pass": return "text-emerald-400";
-      case "warn": return "text-amber-400";
-      case "result": return "text-primary font-bold";
-      case "scan": return "text-foreground/80";
-      case "info": return "text-muted-foreground";
-      default: return "";
-    }
-  };
+const TrustSection = () => {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
-    <div ref={containerRef} className="w-full max-w-2xl mx-auto">
-      <div className="rounded-lg border border-border overflow-hidden bg-background/80 backdrop-blur-sm">
-        {/* Title bar */}
-        <div className="flex items-center gap-2 px-4 py-2.5 bg-secondary/50 border-b border-border">
-          <div className="flex gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-destructive/60" />
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-500/60" />
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/60" />
-          </div>
-          <span className="text-[10px] font-mono text-muted-foreground ml-2">tenazity-scan — security audit</span>
-        </div>
-        {/* Terminal body */}
-        <div ref={termRef} className="p-4 h-72 overflow-y-auto font-mono text-xs leading-relaxed">
-          {scanLines.slice(0, visibleLines).map((line, i) => (
-            <div key={i} className={`${getLineColor(line.type)} ${i === visibleLines - 1 ? "animate-fade-in" : ""}`}>
-              {line.text || "\u00A0"}
+    <section className="py-24 lg:py-32 bg-secondary/20 relative overflow-hidden">
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')] opacity-[0.02] mix-blend-overlay pointer-events-none" />
+
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="flex flex-col lg:flex-row gap-16 lg:gap-24">
+          
+          {/* Left Column - Sticky Header */}
+          <div className="lg:w-1/3">
+            <div className="sticky top-32">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.7 }}
+              >
+                <p className="text-primary text-xs font-semibold tracking-widest uppercase mb-4">
+                  Our Approach
+                </p>
+                <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
+                  Why work<br/> with us.
+                </h2>
+                <p className="text-muted-foreground text-base font-light leading-relaxed mb-8">
+                  We treat every project as if it were our own startup. No cutting corners, no generic templates. Just premium engineering and thoughtful design.
+                </p>
+                <a 
+                  href="#contact" 
+                  className="inline-flex items-center gap-2 text-sm font-semibold hover:text-primary transition-colors group"
+                >
+                  Start a conversation
+                  <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                </a>
+              </motion.div>
             </div>
-          ))}
-          {started && visibleLines < scanLines.length && (
-            <span className="inline-block w-1.5 h-3.5 bg-primary animate-pulse ml-0.5" />
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
+          </div>
 
-const MatrixRain = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let animId: number;
-    const chars = "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン";
-    const fontSize = 14;
-    let columns: number;
-    let drops: number[];
-
-    const resize = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-      columns = Math.floor(canvas.width / fontSize);
-      drops = Array(columns).fill(1).map(() => Math.random() * -50);
-    };
-
-    resize();
-    window.addEventListener("resize", resize);
-
-    const draw = () => {
-      ctx.fillStyle = "rgba(8, 10, 15, 0.08)";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "hsl(174 100% 50% / 0.12)";
-      ctx.font = `${fontSize}px monospace`;
-
-      for (let i = 0; i < columns; i++) {
-        const char = chars[Math.floor(Math.random() * chars.length)];
-        ctx.fillText(char, i * fontSize, drops[i] * fontSize);
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.98) {
-          drops[i] = 0;
-        }
-        drops[i] += 0.4;
-      }
-      animId = requestAnimationFrame(draw);
-    };
-
-    draw();
-    return () => {
-      cancelAnimationFrame(animId);
-      window.removeEventListener("resize", resize);
-    };
-  }, []);
-
-  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />;
-};
-
-const TestimonialCarousel = () => {
-  const [active, setActive] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActive((prev) => (prev + 1) % testimonials.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const prev = () => setActive((a) => (a - 1 + testimonials.length) % testimonials.length);
-  const next = () => setActive((a) => (a + 1) % testimonials.length);
-
-  const t = testimonials[active];
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
-      className="mb-20"
-    >
-      <div className="text-center mb-10">
-        <Quote className="mx-auto text-primary/60 mb-4" size={32} />
-        <h3 className="text-xl md:text-2xl font-bold">What Clients Say</h3>
-      </div>
-
-      <div className="max-w-2xl mx-auto relative">
-        <button
-          onClick={prev}
-          className="absolute -left-4 md:-left-12 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/30 transition-colors"
-          aria-label="Previous testimonial"
-        >
-          <ChevronLeft size={16} />
-        </button>
-        <button
-          onClick={next}
-          className="absolute -right-4 md:-right-12 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/30 transition-colors"
-          aria-label="Next testimonial"
-        >
-          <ChevronRight size={16} />
-        </button>
-
-        <div className="overflow-hidden rounded-lg border border-border/50 bg-card/50 backdrop-blur-sm p-8 md:p-10 min-h-[180px] flex flex-col items-center justify-center text-center">
-          <AnimatePresence mode="wait">
+          {/* Right Column - Staggered List */}
+          <div className="lg:w-2/3">
             <motion.div
-              key={active}
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -30 }}
-              transition={{ duration: 0.35 }}
+              variants={container}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, margin: "-100px" }}
+              className="flex flex-col"
             >
-              <p className="text-base md:text-lg text-foreground/90 leading-relaxed mb-6 italic">
-                &ldquo;{t.quote}&rdquo;
-              </p>
-              <div className="flex items-center justify-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center">
-                  <span className="text-sm font-semibold text-primary">{t.author.charAt(0)}</span>
-                </div>
-                <div className="text-left">
-                  <p className="text-sm font-medium">{t.author}</p>
-                  <p className="text-xs text-muted-foreground">{t.role}, {t.company}</p>
-                </div>
-              </div>
+              {values.map((v, index) => (
+                <motion.div
+                  key={v.title}
+                  variants={itemVariant}
+                  onMouseEnter={() => setHoveredIndex(index)}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                  className={`group relative p-8 border-b border-border/40 transition-colors duration-500 cursor-default ${
+                    hoveredIndex !== null && hoveredIndex !== index ? 'opacity-40' : 'opacity-100'
+                  }`}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-lg pointer-events-none -z-10" />
+                  
+                  <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 sm:items-center">
+                    <div className="w-12 h-12 rounded-2xl bg-card border border-border/50 flex items-center justify-center flex-shrink-0 group-hover:scale-110 group-hover:bg-primary/10 group-hover:border-primary/30 group-hover:text-primary transition-all duration-500 ease-[0.25,0.46,0.45,0.94]">
+                      <v.icon className="text-muted-foreground group-hover:text-primary transition-colors duration-500" size={20} />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold mb-2 tracking-tight">{v.title}</h3>
+                      <p className="text-muted-foreground text-sm font-light leading-relaxed max-w-xl">
+                        {v.description}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
             </motion.div>
-          </AnimatePresence>
-        </div>
-
-        <div className="flex justify-center gap-2 mt-5">
-          {testimonials.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setActive(i)}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                i === active ? "bg-primary w-6" : "bg-muted-foreground/30 w-2 hover:bg-muted-foreground/50"
-              }`}
-              aria-label={`Go to testimonial ${i + 1}`}
-            />
-          ))}
-        </div>
-      </div>
-    </motion.div>
-  );
-};
-
-const TrustSection = () => (
-  <section className="relative py-24 lg:py-32 overflow-hidden">
-    {/* Matrix rain */}
-    <MatrixRain />
-    {/* Grid overlay */}
-    <div
-      className="absolute inset-0 pointer-events-none opacity-[0.04]"
-      style={{
-        backgroundImage:
-          "linear-gradient(hsl(174 100% 50%) 1px, transparent 1px), linear-gradient(90deg, hsl(174 100% 50%) 1px, transparent 1px)",
-        backgroundSize: "60px 60px",
-      }}
-    />
-    {/* CRT Scan lines */}
-    <div
-      className="absolute inset-0 pointer-events-none opacity-[0.03]"
-      style={{
-        backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, hsl(174 100% 50%) 2px, hsl(174 100% 50%) 4px)",
-      }}
-    />
-    {/* Vignette */}
-    <div
-      className="absolute inset-0 pointer-events-none"
-      style={{
-        background: "radial-gradient(ellipse at center, transparent 0%, transparent 50%, hsl(220 20% 4% / 0.4) 100%)",
-      }}
-    />
-    <div className="relative z-10 container mx-auto px-4">
-      {/* Security Banner */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-80px" }}
-        transition={{ duration: 0.6 }}
-        className="max-w-4xl mx-auto text-center mb-10"
-      >
-        <ShieldCheck className="mx-auto text-primary mb-4" size={40} />
-        <h3 className="text-2xl md:text-3xl font-bold mb-3">Security-First Engineering</h3>
-        <p className="text-muted-foreground max-w-xl mx-auto leading-relaxed">
-          Every line of code we write is audited for vulnerabilities. We don't just build; we protect.
-        </p>
-      </motion.div>
-
-      {/* Terminal */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-60px" }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className="mb-20"
-      >
-        <TerminalWindow />
-      </motion.div>
-
-      {/* Testimonials Carousel */}
-      <TestimonialCarousel />
-
-      {/* Tech Stack Marquee */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-      >
-        <p className="text-center text-xs font-mono text-muted-foreground uppercase tracking-widest mb-8">
-          Our Tech Stack
-        </p>
-        <div className="overflow-hidden relative">
-          <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-background to-transparent z-10" />
-          <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-background to-transparent z-10" />
-          <div className="flex marquee">
-            {[...techStack, ...techStack].map((tech, i) => (
-              <div key={`${tech}-${i}`} className="flex-shrink-0 mx-8 flex items-center justify-center">
-                <span className="text-lg font-mono text-muted-foreground/60 whitespace-nowrap">{tech}</span>
-              </div>
-            ))}
           </div>
         </div>
-      </motion.div>
-    </div>
-  </section>
-);
+
+        {/* Tech Stack Marquee (Bottom) */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="mt-32 border-t border-border/40 pt-16"
+        >
+          <p className="text-center text-[10px] font-semibold text-muted-foreground/40 uppercase tracking-widest mb-10">
+            Powered by modern technologies
+          </p>
+
+          <div className="overflow-hidden relative max-w-5xl mx-auto">
+            <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-background via-background/80 to-transparent z-10" />
+            <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-background via-background/80 to-transparent z-10" />
+            <div className="flex marquee opacity-60 hover:opacity-100 transition-opacity duration-500">
+              {[...techStack, ...techStack].map((tech, i) => (
+                <div
+                  key={`${tech}-${i}`}
+                  className="flex-shrink-0 mx-8 flex items-center justify-center"
+                >
+                  <span className="text-lg font-bold text-muted-foreground/30 whitespace-nowrap tracking-tight">
+                    {tech}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
 
 export default TrustSection;
