@@ -1,6 +1,5 @@
-import { useRef } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { Hammer, Timer, Wrench, ArrowUpRight } from "lucide-react";
+import { motion } from "framer-motion";
+import { Hammer, Timer, Wrench, ArrowUpRight, Sparkles } from "lucide-react";
 import ScrollRevealText from "@/components/ui/ScrollRevealText";
 
 const labs = [
@@ -8,7 +7,7 @@ const labs = [
     icon: Hammer,
     name: "Forge",
     description:
-      "Our freelance studio OS — project management, time tracking, and invoicing in one clean interface.",
+      "Our freelance studio OS — complete project management, automated invoicing, milestone tracking, and client portals in one cohesive platform.",
     url: "https://forge.tenazity.com",
     status: "Live",
   },
@@ -16,143 +15,98 @@ const labs = [
     icon: Timer,
     name: "Chrono",
     description:
-      "A focus timer built for deep work. Clean UI, ambient sounds, and session analytics.",
+      "A distraction-free focus timer built for deep work. Ambient soundscapes, session analytics, and minimalist keyboard shortcuts.",
     url: "https://chrono.tenazity.com",
     status: "Live",
-  },
-  {
-    icon: Wrench,
-    name: "More in progress",
-    description:
-      "We're always building. New tools and experiments are in the pipeline.",
-    url: null,
-    status: "Coming Soon",
   },
 ];
 
 const LabsSection = () => {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 80,
-    damping: 30,
-  });
-
   return (
-    <section id="labs" ref={sectionRef} className="py-24 lg:py-32 relative overflow-hidden">
-      {/* Subtle background */}
-      <div className="absolute inset-0 bg-secondary/10 pointer-events-none" />
-
+    <section id="labs" className="py-24 lg:py-32 relative overflow-hidden bg-secondary/10 border-t border-border/40">
       <div className="relative container mx-auto px-4 z-10">
         <div className="mb-16 max-w-xl">
-          <motion.p
-            style={{
-              opacity: useTransform(smoothProgress, [0.05, 0.15], [0, 1]),
-              x: useTransform(smoothProgress, [0.05, 0.15], [-20, 0]),
-            }}
-            className="text-primary text-xs font-semibold tracking-widest uppercase mb-3"
-          >
-            Tenazity Labs
-          </motion.p>
+          <div className="flex items-center gap-2 mb-3">
+            <div className="h-[2px] w-12 bg-primary rounded-full" />
+            <span className="text-primary text-xs font-semibold tracking-widest uppercase">
+              Tenazity Labs
+            </span>
+          </div>
           <ScrollRevealText
             text="Built by us, for us."
-            className="text-3xl md:text-4xl font-bold tracking-tight mb-3"
-            scrollRange={[0, 0.4]}
+            className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-3"
+            highlightWords={["Built", "by", "us,"]}
+            highlightClass="text-gradient-accent"
           />
-          <motion.p
-            style={{
-              opacity: useTransform(smoothProgress, [0.1, 0.25], [0, 1]),
-              y: useTransform(smoothProgress, [0.1, 0.25], [15, 0]),
-            }}
-            className="text-muted-foreground max-w-lg text-sm leading-relaxed"
-          >
-            We practice what we preach. These are internal tools we've built to
-            solve our own problems — proof that we ship real products.
-          </motion.p>
+          <p className="text-muted-foreground max-w-lg text-sm sm:text-base leading-relaxed font-light">
+            We practice what we preach. These are proprietary products and experiments we build internally to solve our own workflows — proof that we ship real-world products.
+          </p>
         </div>
 
         <div className="grid sm:grid-cols-3 gap-6">
-          {labs.map((item, index) => (
-            <LabCard key={item.name} item={item} index={index} progress={smoothProgress} />
-          ))}
+          {labs.map((item, index) => {
+            const Wrapper = item.url ? motion.a : motion.div;
+            const linkProps = item.url
+              ? {
+                  href: item.url,
+                  target: "_blank" as const,
+                  rel: "noopener noreferrer",
+                }
+              : {};
+
+            return (
+              <Wrapper
+                key={item.name}
+                {...linkProps}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45, delay: index * 0.1 }}
+                className={`group block bg-card/60 backdrop-blur-md rounded-2xl border border-border/60 p-6 transition-all duration-300 h-full glow-border-wrapper flex flex-col justify-between ${
+                  item.url
+                    ? "hover:border-primary/40 hover:bg-card/90 hover:-translate-y-1.5 hover:shadow-xl cursor-pointer"
+                    : "opacity-75 cursor-default"
+                }`}
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-5">
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/25 flex items-center justify-center group-hover:scale-105 group-hover:bg-primary/20 transition-all duration-300">
+                      <item.icon className="text-primary" size={22} />
+                    </div>
+                    <span
+                      className={`inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider rounded-full px-3 py-1 ${
+                        item.status === "Live"
+                          ? "text-emerald-400 bg-emerald-400/10 border border-emerald-400/25 shadow-sm"
+                          : "text-muted-foreground/80 bg-secondary/70 border border-border/40"
+                      }`}
+                    >
+                      {item.status === "Live" && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      )}
+                      {item.status}
+                    </span>
+                  </div>
+
+                  <h3 className="text-xl font-bold mb-2 flex items-center gap-2 tracking-tight text-foreground">
+                    {item.name}
+                    {item.url && (
+                      <ArrowUpRight
+                        className="text-muted-foreground/40 group-hover:text-primary transition-colors group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
+                        size={18}
+                      />
+                    )}
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed font-light">
+                    {item.description}
+                  </p>
+                </div>
+              </Wrapper>
+            );
+          })}
         </div>
       </div>
     </section>
   );
 };
-
-function LabCard({
-  item,
-  index,
-  progress,
-}: {
-  item: typeof labs[0];
-  index: number;
-  progress: any;
-}) {
-  const cardStart = 0.1 + index * 0.08;
-  const cardEnd = cardStart + 0.15;
-
-  const y = useTransform(progress, [cardStart, cardEnd], [40, 0]);
-  const opacity = useTransform(progress, [cardStart, cardEnd], [0, 1]);
-  const scale = useTransform(progress, [cardStart, cardEnd], [0.92, 1]);
-
-  const Wrapper = item.url ? motion.a : motion.div;
-  const linkProps = item.url
-    ? {
-        href: item.url,
-        target: "_blank" as const,
-        rel: "noopener noreferrer",
-      }
-    : {};
-
-  return (
-    <Wrapper
-      {...linkProps}
-      style={{ y, opacity, scale }}
-      className={`group block bg-card/60 backdrop-blur-md rounded-2xl border border-border/50 p-6 transition-all duration-500 h-full glow-border-wrapper ${
-        item.url
-          ? "hover:border-primary/30 hover:bg-card/80 hover:-translate-y-1.5 hover:shadow-xl cursor-pointer"
-          : "opacity-60 cursor-default"
-      }`}
-    >
-      <div className="flex items-center justify-between mb-4">
-        <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-          <item.icon className="text-primary" size={20} />
-        </div>
-        <span
-          className={`inline-flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider rounded-full px-2.5 py-1 ${
-            item.status === "Live"
-              ? "text-emerald-400/90 bg-emerald-400/10 border border-emerald-400/20"
-              : "text-muted-foreground/60 bg-secondary/50 border border-border/40"
-          }`}
-        >
-          {item.status === "Live" && (
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-          )}
-          {item.status}
-        </span>
-      </div>
-
-      <h3 className="text-lg font-semibold mb-2 flex items-center gap-2 tracking-tight">
-        {item.name}
-        {item.url && (
-          <ArrowUpRight
-            className="text-muted-foreground/40 group-hover:text-primary transition-colors group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
-            size={16}
-          />
-        )}
-      </h3>
-      <p className="text-sm text-muted-foreground leading-relaxed font-light">
-        {item.description}
-      </p>
-    </Wrapper>
-  );
-}
 
 export default LabsSection;

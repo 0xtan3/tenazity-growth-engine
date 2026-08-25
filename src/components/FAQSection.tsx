@@ -1,87 +1,104 @@
-import { useRef, useState } from "react";
-import { motion, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Minus } from "lucide-react";
 import ScrollRevealText from "@/components/ui/ScrollRevealText";
 
 const faqs = [
   {
     question: "Do you only take on large enterprise projects?",
-    answer: "Not at all. We scale our team to fit the scope. Whether it's a fast MVP for a new startup or a complex digital migration for an established business, if it fits our tech stack and we believe in the vision, we'll build it.",
+    answer: "Not at all. We scale our team to fit the scope. Whether it's a fast SaaS MVP for a startup or an end-to-end digital infrastructure migration for an established brand, if it fits our modern tech stack and we believe in the vision, we'll build it.",
   },
   {
-    question: "Are you limited to clients in a specific city?",
-    answer: "No. While we have a strong presence in India, we operate entirely remotely and work with clients globally. We have streamlined processes to maintain seamless communication across all time zones.",
+    question: "How fast can you deliver a complete MVP?",
+    answer: "Most MVP builds take between 2 to 4 weeks from initial kickoff to production deployment. We work in rapid, transparent 2-day sprint cycles with live staging previews so you see real progress continuously.",
   },
   {
     question: "What is your pricing model?",
-    answer: "Every project is unique. For clear-cut deliverables (like an MVP), we offer fixed-price contracts. For ongoing maintenance or complex R&D, we offer dedicated monthly retainers. We'll find the structure that works best for your business.",
+    answer: "Every project is transparently structured. For well-defined deliverables (like SaaS MVPs and custom websites), we offer clear fixed-price contracts. For ongoing feature development or complex R&D, we offer dedicated monthly retainers. No surprise fees.",
   },
   {
-    question: "Do you handle maintenance and hosting after launch?",
-    answer: "Yes. Building the product is only half the battle. We offer ongoing maintenance retainers to handle server hosting, bug fixes, updates, and scaling your infrastructure as your user base grows.",
+    question: "Do you handle maintenance and cloud hosting after launch?",
+    answer: "Yes. Shipping is just the beginning. We provide ongoing support retainers to manage AWS/Vercel cloud infrastructure, database scaling, automated backups, security patches, and iterative feature development as your user base grows.",
+  },
+  {
+    question: "Are you limited to clients in a specific timezone?",
+    answer: "No. While based in India, we operate entirely globally and work with founders across the US, UK, Europe, and Asia. We have structured communication routines that ensure smooth collaboration regardless of timezone.",
   },
 ];
 
 const FAQSection = () => {
-  const sectionRef = useRef<HTMLElement>(null);
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 80,
-    damping: 30,
-  });
-
-  // Each FAQ card gets a staggered scroll range
-  const faqRanges = [
-    [0.05, 0.2],
-    [0.1, 0.25],
-    [0.15, 0.3],
-    [0.2, 0.35],
-  ];
-
   return (
-    <section ref={sectionRef} className="py-24 lg:py-32 bg-background border-t border-border/40">
-      <div className="container mx-auto px-4 max-w-4xl">
-        {/* Heading with ScrollRevealText */}
+    <section id="faq" className="py-24 lg:py-32 bg-background border-t border-border/40 relative">
+      <div className="container mx-auto px-4 max-w-3xl relative z-10">
+        {/* Heading */}
         <div className="text-center mb-16">
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <span className="w-2 h-2 rounded-full bg-primary" />
+            <span className="text-primary text-xs font-semibold tracking-widest uppercase">
+              Frequently Asked Questions
+            </span>
+          </div>
           <ScrollRevealText
-            text="Common Questions"
-            className="text-3xl md:text-5xl font-bold tracking-tight mb-4"
-            scrollRange={[0, 0.5]}
+            text="Everything you need to know."
+            className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-4 justify-center"
+            highlightWords={["need", "to", "know."]}
+            highlightClass="text-gradient-accent"
           />
-          <motion.p
-            style={{
-              opacity: useTransform(smoothProgress, [0.08, 0.2], [0, 1]),
-              y: useTransform(smoothProgress, [0.08, 0.2], [15, 0]),
-            }}
-            className="text-muted-foreground text-lg"
-          >
-            Everything you need to know about working with us.
-          </motion.p>
+          <p className="text-muted-foreground text-base sm:text-lg font-light max-w-md mx-auto">
+            Clear answers to common questions about our process, pricing, and timelines.
+          </p>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-3.5">
           {faqs.map((faq, index) => {
             const isOpen = openIndex === index;
-            const range = faqRanges[index] as [number, number];
-            const isOdd = index % 2 !== 0;
 
             return (
-              <FAQCard
+              <motion.div
                 key={index}
-                faq={faq}
-                isOpen={isOpen}
-                index={index}
-                isOdd={isOdd}
-                progress={smoothProgress}
-                range={range}
-                onToggle={() => setOpenIndex(isOpen ? null : index)}
-              />
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: index * 0.08 }}
+                className={`border rounded-2xl overflow-hidden transition-all duration-300 ${
+                  isOpen
+                    ? "border-primary/40 bg-card/90 shadow-xl shadow-primary/5 glow-border-wrapper"
+                    : "border-border/60 bg-card/30 hover:border-border/90 hover:bg-card/60"
+                }`}
+              >
+                <button
+                  onClick={() => setOpenIndex(isOpen ? null : index)}
+                  className="w-full text-left px-6 py-5 flex items-center justify-between gap-4 cursor-pointer"
+                >
+                  <span className="font-bold text-base sm:text-lg text-foreground tracking-tight">
+                    {faq.question}
+                  </span>
+                  <div
+                    className={`p-1.5 rounded-full shrink-0 transition-colors duration-300 ${
+                      isOpen ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"
+                    }`}
+                  >
+                    {isOpen ? <Minus size={15} /> : <Plus size={15} />}
+                  </div>
+                </button>
+
+                <AnimatePresence>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      <div className="px-6 pb-6 text-sm sm:text-base text-muted-foreground font-light leading-relaxed border-t border-border/30 pt-4">
+                        {faq.answer}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
             );
           })}
         </div>
@@ -89,92 +106,5 @@ const FAQSection = () => {
     </section>
   );
 };
-
-function FAQCard({
-  faq,
-  isOpen,
-  index,
-  isOdd,
-  progress,
-  range,
-  onToggle,
-}: {
-  faq: typeof faqs[0];
-  isOpen: boolean;
-  index: number;
-  isOdd: boolean;
-  progress: any;
-  range: [number, number];
-  onToggle: () => void;
-}) {
-  // Staggered entrance — alternate from left/right with blur
-  const x = useTransform(progress, [range[0], range[1]], [isOdd ? 40 : -40, 0]);
-  const opacity = useTransform(progress, [range[0], range[1]], [0, 1]);
-  const blur = useTransform(progress, [range[0], range[1]], [8, 0]);
-
-  // Answer text word-by-word stagger animation
-  const answerWords = faq.answer.split(" ");
-
-  return (
-    <motion.div
-      style={{
-        x,
-        opacity,
-        filter: useTransform(blur, (v) => `blur(${v}px)`),
-      }}
-      className={`border rounded-2xl overflow-hidden transition-colors duration-300 ${
-        isOpen
-          ? "border-primary/50 bg-primary/5 glow-border-wrapper glow-border-active"
-          : "border-border/50 bg-card/30 hover:border-border"
-      }`}
-    >
-      <button
-        onClick={onToggle}
-        className="w-full text-left px-6 py-5 flex items-center justify-between gap-4"
-      >
-        <span className="font-semibold text-lg">{faq.question}</span>
-        <motion.div
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className={`p-1 rounded-full shrink-0 transition-colors ${
-            isOpen ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"
-          }`}
-        >
-          {isOpen ? <Minus size={16} /> : <Plus size={16} />}
-        </motion.div>
-      </button>
-
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-          >
-            <div className="px-6 pb-6 leading-relaxed">
-              {/* Word-by-word typewriter stagger on open */}
-              {answerWords.map((word, wi) => (
-                <motion.span
-                  key={wi}
-                  initial={{ opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{
-                    duration: 0.15,
-                    delay: wi * 0.015,
-                    ease: "easeOut",
-                  }}
-                  className="inline-block mr-[0.3em] text-muted-foreground"
-                >
-                  {word}
-                </motion.span>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
-  );
-}
 
 export default FAQSection;

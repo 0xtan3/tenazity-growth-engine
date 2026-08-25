@@ -1,93 +1,82 @@
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 
 interface ScrollRevealTextProps {
   text: string;
   className?: string;
-  /** Scroll progress range [start, end] within the parent — defaults to [0, 1] */
-  scrollRange?: [number, number];
-  /** Highlight specific words with an accent class */
   highlightWords?: string[];
   highlightClass?: string;
-  /** Tag to render — defaults to "p" */
   as?: "h1" | "h2" | "h3" | "h4" | "p" | "span";
-  /** Whether to use the viewport as scroll container (true) or a parent ref */
+  scrollRange?: [number, number];
   useViewport?: boolean;
 }
 
 export default function ScrollRevealText({
   text,
   className = "",
-  scrollRange = [0, 1],
   highlightWords = [],
   highlightClass = "text-gradient-accent",
   as: Tag = "p",
-  useViewport = true,
 }: ScrollRevealTextProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
   const words = text.split(" ");
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start 0.85", "start 0.3"],
-  });
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.04,
+        delayChildren: 0.1,
+      },
+    },
+  };
+
+  const wordVariants = {
+    hidden: {
+      opacity: 0,
+      y: 16,
+      filter: "blur(6px)",
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      filter: "blur(0px)",
+      transition: {
+        duration: 0.45,
+        ease: [0.22, 1, 0.36, 1],
+      },
+    },
+  };
 
   return (
-    <div ref={containerRef} className={className}>
+    <div className={className}>
       <Tag className="sr-only">{text}</Tag>
-      <span aria-hidden="true" className={className} style={{ display: "flex", flexWrap: "wrap" }}>
+      <motion.span
+        aria-hidden="true"
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-40px" }}
+        className={`inline-flex flex-wrap ${className}`}
+      >
         {words.map((word, i) => {
-          const wordStart = scrollRange[0] + (i / words.length) * (scrollRange[1] - scrollRange[0]);
-          const wordEnd = scrollRange[0] + ((i + 1) / words.length) * (scrollRange[1] - scrollRange[0]);
+          const cleanWord = word.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
           const isHighlight = highlightWords.some(
-            (hw) => word.replace(/[^a-zA-Z0-9]/g, "").toLowerCase() === hw.toLowerCase()
+            (hw) => cleanWord === hw.toLowerCase()
           );
 
           return (
-            <Word
+            <motion.span
               key={`${word}-${i}`}
-              word={word}
-              progress={scrollYProgress}
-              range={[wordStart, wordEnd]}
-              isHighlight={isHighlight}
-              highlightClass={highlightClass}
-            />
+              variants={wordVariants}
+              className={`inline-block mr-[0.28em] ${
+                isHighlight ? highlightClass : ""
+              }`}
+            >
+              {word}
+            </motion.span>
           );
         })}
-      </span>
+      </motion.span>
     </div>
-  );
-}
-
-function Word({
-  word,
-  progress,
-  range,
-  isHighlight,
-  highlightClass,
-}: {
-  word: string;
-  progress: any;
-  range: [number, number];
-  isHighlight: boolean;
-  highlightClass: string;
-}) {
-  const opacity = useTransform(progress, range, [0.15, 1]);
-  const blur = useTransform(progress, range, [4, 0]);
-  const y = useTransform(progress, range, [6, 0]);
-
-  return (
-    <motion.span
-      style={{
-        opacity,
-        filter: useTransform(blur, (v) => `blur(${v}px)`),
-        y,
-      }}
-      className={`inline-block mr-[0.3em] transition-colors duration-300 ${
-        isHighlight ? highlightClass : ""
-      }`}
-    >
-      {word}
-    </motion.span>
   );
 }

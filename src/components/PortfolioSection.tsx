@@ -1,219 +1,227 @@
-import { useRef } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowUpRight, Sparkles, ExternalLink, Globe2, ShieldCheck, MapPin } from "lucide-react";
 import ScrollRevealText from "@/components/ui/ScrollRevealText";
 
-const projects = [
+const featuredProducts = [
   {
-    category: "Productivity",
+    category: "Productivity & Deep Work",
     title: "Chrono",
+    tagline: "Distraction-Free Focus & Flow Timer",
     description:
-      "A distraction-free focus timer designed to help you stay in flow. Clean interface, ambient soundscapes, and session tracking.",
+      "An ambient focus timer designed to elevate deep work sessions. Features generative soundscapes, Pomodoro cycles, session tracking, and minimalist keyboard shortcuts.",
     url: "https://chrono.tenazity.com",
-    tech: ["React", "TypeScript", "Framer Motion"],
+    tech: ["React", "TypeScript", "Tailwind CSS", "Web Audio API"],
     highlight: "Live Product",
-    color: "from-violet-500/20 to-purple-500/5",
+    gradient: "from-white/5 via-white/[0.02] to-transparent",
+    domain: "chrono.tenazity.com",
   },
   {
-    category: "Studio OS",
+    category: "Studio OS & Operations",
     title: "Forge",
+    tagline: "Operating System for Freelance Studios",
     description:
-      "A freelance studio operating system — manage projects, track time, handle invoicing, and streamline creative workflows.",
+      "An all-in-one studio management platform. Handles client onboarding, milestones, time tracking, invoice generation, and real-time project profitability.",
     url: "https://forge.tenazity.com",
-    tech: ["React", "TypeScript", "Tailwind CSS"],
+    tech: ["React", "Next.js", "TypeScript", "Tailwind CSS", "PostgreSQL"],
     highlight: "Live Product",
-    color: "from-indigo-500/20 to-blue-500/5",
-  }
+    gradient: "from-white/5 via-white/[0.02] to-transparent",
+    domain: "forge.tenazity.com",
+  },
+];
+
+const globalClients = [
+  {
+    name: "Madras Kitchen",
+    type: "Restaurant & Online Ordering Web Platform",
+    location: "Auckland, New Zealand",
+    url: "https://www.madraskitchen.co.nz/",
+    domain: "madraskitchen.co.nz",
+    deliverables: "Custom Web Architecture, Local SEO Engine & Table Booking Flow",
+  },
+  {
+    name: "Copper Chimney",
+    type: "Premier Hospitality Brand & Mobile Experience",
+    location: "Christchurch, New Zealand",
+    url: "https://www.copperchimney.co.nz/",
+    domain: "copperchimney.co.nz",
+    deliverables: "Luxury Brand Portal, High-Speed Reservation Engine & Menu Systems",
+  },
 ];
 
 const PortfolioSection = () => {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end end"],
-  });
-
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  });
-
-  // Card scroll ranges
-  const card1Range: [number, number] = [0.15, 0.5];
-  const card2Range: [number, number] = [0.45, 0.8];
-
   return (
-    <section ref={sectionRef} id="work" className="pinned-section" style={{ height: "300vh" }}>
-      <div className="pinned-content flex-col py-20">
-        <div className="container mx-auto px-4 w-full">
-          {/* Header */}
-          <motion.div
-            style={{
-              opacity: useTransform(smoothProgress, [0, 0.15], [0, 1]),
-              y: useTransform(smoothProgress, [0, 0.15], [30, 0]),
-            }}
-            className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8"
-          >
-            <div className="max-w-2xl">
-              <motion.p
-                style={{
-                  opacity: useTransform(smoothProgress, [0, 0.1], [0, 1]),
-                  x: useTransform(smoothProgress, [0, 0.1], [-20, 0]),
-                }}
-                className="text-primary text-xs font-semibold tracking-widest uppercase mb-4"
-              >
-                Our Work
-              </motion.p>
-              <ScrollRevealText
-                text="Selected projects."
-                className="text-4xl md:text-5xl font-bold tracking-tight"
-                scrollRange={[0, 0.4]}
-              />
-            </div>
-            <motion.p
-              style={{
-                opacity: useTransform(smoothProgress, [0.05, 0.2], [0, 1]),
-                y: useTransform(smoothProgress, [0.05, 0.2], [20, 0]),
-              }}
-              className="text-muted-foreground text-lg font-light leading-relaxed max-w-md md:text-right"
-            >
-              We don't just build for clients — we build for ourselves too.
-              Live products designed and shipped by Tenazity.
-            </motion.p>
-          </motion.div>
+    <section id="work" className="py-24 lg:py-32 bg-background relative overflow-hidden border-t border-border/40">
+      {/* Warm glow ambiance */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary/5 rounded-full blur-[160px] pointer-events-none" />
 
-          {/* Cards */}
-          <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-            {projects.map((project, index) => (
-              <ProjectCard
-                key={project.title}
-                project={project}
-                index={index}
-                progress={smoothProgress}
-                range={index === 0 ? card1Range : card2Range}
-              />
+      <div className="container mx-auto px-4 relative z-10 w-full">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+          <div className="max-w-2xl">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="h-[2px] w-12 bg-primary rounded-full" />
+              <span className="text-primary text-xs font-semibold tracking-widest uppercase">
+                Featured Work & Products
+              </span>
+            </div>
+            <ScrollRevealText
+              text="Products designed with craft, built to scale."
+              className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight"
+              highlightWords={["built", "to", "scale."]}
+              highlightClass="text-gradient-accent"
+            />
+          </div>
+          <p className="text-muted-foreground text-base font-light leading-relaxed max-w-md md:text-right">
+            We build and scale live products from scratch. Clean architecture, high speed, and delightful user experiences.
+          </p>
+        </div>
+
+        {/* Flagship Product Cards Grid */}
+        <div className="grid md:grid-cols-2 gap-8 lg:gap-10 mb-16">
+          {featuredProducts.map((project, index) => (
+            <motion.a
+              key={project.title}
+              href={project.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.15, ease: [0.22, 1, 0.36, 1] }}
+              className="group block rounded-2xl bg-card/50 border border-border/70 hover:border-primary/40 transition-all duration-500 overflow-hidden glow-border-wrapper hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10 flex flex-col justify-between"
+            >
+              {/* Top Visual Box */}
+              <div className={`relative aspect-[16/10] w-full bg-gradient-to-br ${project.gradient} border-b border-border/40 p-6 sm:p-8 flex flex-col justify-between overflow-hidden`}>
+                <div className="flex items-center justify-between z-10">
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-primary bg-background/90 backdrop-blur-md border border-primary/25 rounded-full px-3 py-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                    {project.highlight}
+                  </span>
+                  <div className="w-10 h-10 rounded-full bg-background/80 backdrop-blur-md border border-border/60 flex items-center justify-center text-foreground group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-all duration-300 shadow-md">
+                    <ArrowUpRight size={18} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  </div>
+                </div>
+
+                {/* Simulated UI Window Preview */}
+                <div className="relative z-10 my-auto transform group-hover:scale-105 transition-transform duration-500">
+                  <div className="w-full max-w-sm mx-auto bg-background/95 backdrop-blur-xl border border-border/70 rounded-xl shadow-2xl overflow-hidden">
+                    <div className="h-7 border-b border-border/50 flex items-center px-3 gap-1.5 bg-secondary/40">
+                      <div className="w-2.5 h-2.5 rounded-full bg-red-500/40" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/40" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/40" />
+                      <span className="text-[10px] font-mono text-muted-foreground/70 ml-2">
+                        https://{project.domain}/
+                      </span>
+                    </div>
+                    <div className="p-4 sm:p-5 flex flex-col gap-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground">
+                          {project.title}
+                        </span>
+                        <span className="text-[10px] font-mono bg-primary/10 text-primary border border-primary/20 px-2 py-0.5 rounded">
+                          v1.0 Live
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted-foreground line-clamp-2">
+                        {project.tagline}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom Details Box */}
+              <div className="p-6 sm:p-8 flex-1 flex flex-col justify-between">
+                <div>
+                  <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-1.5">
+                    {project.category}
+                  </p>
+                  <h3 className="text-2xl font-bold mb-3 tracking-tight group-hover:text-foreground">
+                    {project.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed font-light mb-6">
+                    {project.description}
+                  </p>
+                </div>
+
+                <div className="flex gap-2 flex-wrap pt-4 border-t border-border/30">
+                  {project.tech.map((t) => (
+                    <span
+                      key={t}
+                      className="text-[10px] font-mono text-muted-foreground/80 bg-secondary/60 border border-border/40 rounded px-2.5 py-1"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </motion.a>
+          ))}
+        </div>
+
+        {/* Global Client Partnerships Strip */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="rounded-2xl p-6 sm:p-8 bg-card/40 border border-border/60 backdrop-blur-md"
+        >
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-6 border-b border-border/40">
+            <div>
+              <span className="text-xs font-mono font-semibold uppercase tracking-wider text-primary flex items-center gap-1.5 mb-1">
+                <Globe2 size={14} /> International Client Deployments
+              </span>
+              <h4 className="text-lg sm:text-xl font-bold text-foreground">
+                High-Impact Web Platforms Shipped for New Zealand Brands
+              </h4>
+            </div>
+            <span className="text-xs font-mono text-muted-foreground bg-secondary/60 px-3 py-1.5 rounded-full border border-border/40 shrink-0 self-start md:self-auto">
+              Auckland & Christchurch, NZ
+            </span>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-4">
+            {globalClients.map((client) => (
+              <a
+                key={client.name}
+                href={client.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group p-5 rounded-xl bg-secondary/30 border border-border/50 hover:border-primary/40 hover:bg-secondary/60 transition-all duration-300 flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <h5 className="font-bold text-base text-foreground group-hover:text-primary transition-colors">
+                        {client.name}
+                      </h5>
+                      <span className="text-[10px] font-mono text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-2 py-0.5 rounded">
+                        Live Site
+                      </span>
+                    </div>
+                    <ExternalLink size={14} className="text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  </div>
+                  <p className="text-xs text-primary/90 font-medium mb-2">{client.type}</p>
+                  <p className="text-xs text-muted-foreground leading-relaxed font-light mb-3">
+                    {client.deliverables}
+                  </p>
+                </div>
+                <div className="flex items-center justify-between pt-3 border-t border-border/30 text-[11px] text-muted-foreground font-mono">
+                  <span className="flex items-center gap-1">
+                    <MapPin size={11} className="text-primary" /> {client.location}
+                  </span>
+                  <span className="text-primary underline underline-offset-2 font-medium group-hover:opacity-100">
+                    Visit {client.domain}
+                  </span>
+                </div>
+              </a>
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
 };
-
-function ProjectCard({
-  project,
-  index,
-  progress,
-  range,
-}: {
-  project: typeof projects[0];
-  index: number;
-  progress: any;
-  range: [number, number];
-}) {
-  // Cinematic entrance — float up from below with perspective tilt
-  const y = useTransform(progress, [range[0], range[1]], [120, 0]);
-  const opacity = useTransform(progress, [range[0], range[0] + 0.15], [0, 1]);
-  const scale = useTransform(progress, [range[0], range[1]], [0.88, 1]);
-  const rotateX = useTransform(progress, [range[0], range[1]], [15, 0]);
-
-  // View indicator — morphs in as card enters center
-  const viewScale = useTransform(progress, [range[0] + 0.1, range[1] - 0.05], [0, 1]);
-  const viewOpacity = useTransform(progress, [range[0] + 0.1, range[1] - 0.05], [0, 1]);
-
-  // Parallax for the inner mockup
-  const mockupY = useTransform(progress, [range[0], range[1]], [30, -10]);
-
-  // Asymmetric offset for second card
-  const marginTop = index % 2 !== 0 ? "md:mt-16" : "";
-
-  return (
-    <motion.a
-      href={project.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      style={{
-        y,
-        opacity,
-        scale,
-        rotateX,
-        transformPerspective: 1000,
-      }}
-      className={`group block w-full ${marginTop}`}
-    >
-      <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden mb-6 bg-card border border-border/50 glow-border-wrapper">
-        {/* Animated abstract background */}
-        <div className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-50 group-hover:opacity-100 transition-opacity duration-700`} />
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')] opacity-[0.03] mix-blend-overlay" />
-
-        <div className="absolute inset-0 flex flex-col items-center justify-center p-8 transition-transform duration-700 group-hover:scale-105">
-          <span className="text-5xl font-bold text-foreground/90 tracking-tight drop-shadow-sm mb-4">
-            {project.title}
-          </span>
-
-          {/* Parallax simulated UI Window */}
-          <motion.div
-            style={{ y: mockupY }}
-            className="w-full max-w-sm h-32 bg-background/80 backdrop-blur-md border border-border/50 rounded-lg shadow-2xl overflow-hidden translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-700 ease-out delay-100 flex flex-col"
-          >
-            <div className="h-6 border-b border-border/50 flex items-center px-3 gap-1.5 bg-secondary/50">
-              <div className="w-2 h-2 rounded-full bg-border" />
-              <div className="w-2 h-2 rounded-full bg-border" />
-              <div className="w-2 h-2 rounded-full bg-border" />
-            </div>
-            <div className="flex-1 p-4 flex flex-col gap-3">
-              <div className="h-2 w-1/3 bg-border/50 rounded-full" />
-              <div className="h-2 w-3/4 bg-border/30 rounded-full" />
-              <div className="h-2 w-1/2 bg-border/30 rounded-full" />
-            </div>
-          </motion.div>
-        </div>
-
-        {/* View button overlay — scroll-linked morph */}
-        <motion.div
-          style={{
-            scale: viewScale,
-            opacity: viewOpacity,
-          }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-primary text-primary-foreground rounded-full flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300"
-        >
-          <ArrowUpRight size={24} />
-        </motion.div>
-
-        <div className="absolute top-4 left-4">
-          <span className="inline-flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-primary/80 bg-background/80 backdrop-blur-md border border-border/50 rounded-full px-3 py-1">
-            <span className="w-1 h-1 rounded-full bg-primary animate-pulse" />
-            {project.highlight}
-          </span>
-        </div>
-      </div>
-
-      <div className="flex justify-between items-start gap-4">
-        <div>
-          <p className="text-xs font-semibold tracking-wider text-muted-foreground uppercase mb-2">
-            {project.category}
-          </p>
-          <h3 className="text-xl font-bold">{project.title}</h3>
-        </div>
-      </div>
-      <p className="text-sm text-muted-foreground leading-relaxed mt-3 max-w-sm font-light">
-        {project.description}
-      </p>
-
-      <div className="flex gap-2 flex-wrap mt-4">
-        {project.tech.map((t) => (
-          <span
-            key={t}
-            className="text-[10px] text-muted-foreground/60 font-mono bg-secondary/30 rounded px-2 py-1"
-          >
-            {t}
-          </span>
-        ))}
-      </div>
-    </motion.a>
-  );
-}
 
 export default PortfolioSection;

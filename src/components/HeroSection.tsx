@@ -1,12 +1,12 @@
 import { useRef } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { motion, useSpring, useTransform } from "framer-motion";
+import { ArrowRight, Sparkles, CheckCircle2, Clock, Flame } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import EmberParticles from "@/components/ui/EmberParticles";
 import { useMagneticHover } from "@/hooks/useMagneticHover";
 import ScrollRevealText from "@/components/ui/ScrollRevealText";
 
-function MagneticButton({ children, href, className }: { children: React.ReactNode; href: string; className?: string }) {
+function MagneticButton({ children, href, className = "" }: { children: React.ReactNode; href: string; className?: string }) {
   const { x, y, onMouseMove, onMouseLeave } = useMagneticHover(0.25, 20, 180);
   
   return (
@@ -15,7 +15,7 @@ function MagneticButton({ children, href, className }: { children: React.ReactNo
       style={{ x, y }}
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
-      className="inline-block"
+      className={`inline-block ${className}`}
     >
       {children}
     </motion.a>
@@ -23,51 +23,15 @@ function MagneticButton({ children, href, className }: { children: React.ReactNo
 }
 
 const HeroSection = () => {
-  const sectionRef = useRef<HTMLElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
-  const mouseX = useSpring(0.5, { stiffness: 50, damping: 20 });
-  const mouseY = useSpring(0.5, { stiffness: 50, damping: 20 });
+  const mouseX = useSpring(0.5, { stiffness: 120, damping: 20 });
+  const mouseY = useSpring(0.5, { stiffness: 120, damping: 20 });
 
-  // Scroll progress through the pinned section (0 → 1)
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end end"],
-  });
-
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  });
-
-  // Phase 1 (0→0.3): Gradient mesh scales up from center
-  const meshScale = useTransform(smoothProgress, [0, 0.3], [1.15, 1]);
-  const meshOpacity = useTransform(smoothProgress, [0, 0.15], [0.4, 0.7]);
-
-  // Phase 2 (0.3→0.6): Subtitle + CTA fade in
-  const contentOpacity = useTransform(smoothProgress, [0.2, 0.4], [0, 1]);
-  const contentY = useTransform(smoothProgress, [0.2, 0.4], [30, 0]);
-
-  // Phase 3 (0.6→1.0): Pull-away — scale down + fade out
-  const heroScale = useTransform(smoothProgress, [0.6, 1], [1, 0.92]);
-  const heroOpacity = useTransform(smoothProgress, [0.65, 1], [1, 0]);
-  const heroBrightness = useTransform(smoothProgress, [0.7, 1], [1, 0.7]);
-
-  // Dot grid parallax (accelerates on exit)
-  const dotGridY = useTransform(smoothProgress, [0.5, 1], [0, -120]);
-  const dotGridOpacity = useTransform(smoothProgress, [0.6, 0.9], [0.15, 0]);
-
-  // Badge entrance
-  const badgeScale = useTransform(smoothProgress, [0, 0.1], [0.85, 1]);
-  const badgeOpacity = useTransform(smoothProgress, [0, 0.1], [0, 1]);
-
-  // Parallax transforms for dot grid (mouse)
-  const dotX = useSpring(useTransform(mouseX, [0, 1], [-8, 8]), { stiffness: 50, damping: 20 });
-  const dotY = useSpring(useTransform(mouseY, [0, 1], [-8, 8]), { stiffness: 50, damping: 20 });
-
-  // Gradient mesh parallax (mouse — slower, deeper layer)
-  const meshX = useSpring(useTransform(mouseX, [0, 1], [-15, 15]), { stiffness: 30, damping: 25 });
-  const meshY = useSpring(useTransform(mouseY, [0, 1], [-15, 15]), { stiffness: 30, damping: 25 });
+  // Parallax transforms for dot grid & gradient mesh (mouse follow)
+  const dotX = useTransform(mouseX, [0, 1], [-12, 12]);
+  const dotY = useTransform(mouseY, [0, 1], [-12, 12]);
+  const meshX = useTransform(mouseX, [0, 1], [-20, 20]);
+  const meshY = useTransform(mouseY, [0, 1], [-20, 20]);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!heroRef.current) return;
@@ -77,119 +41,134 @@ const HeroSection = () => {
   };
 
   return (
-    <section ref={sectionRef} className="pinned-section" style={{ height: "250vh" }}>
+    <section
+      ref={heroRef}
+      onMouseMove={handleMouseMove}
+      className="relative min-h-[95vh] md:min-h-screen flex items-center justify-center overflow-hidden pt-28 pb-20 border-b border-border/40"
+    >
+      {/* Animated Gradient mesh background — Notion palette */}
+      <motion.div
+        style={{
+          x: meshX,
+          y: meshY,
+          willChange: "transform",
+        }}
+        className="absolute inset-0 gradient-mesh pointer-events-none opacity-80"
+      />
+
+      {/* Interactive Dot Grid layer */}
+      <motion.div
+        style={{
+          x: dotX,
+          y: dotY,
+          willChange: "transform",
+        }}
+        className="absolute inset-[-40px] dot-grid opacity-30 pointer-events-none"
+      />
+
+      {/* Floating Ember Particles */}
+      <EmberParticles />
+
+      {/* Radial spotlight center */}
       <div
-        ref={heroRef}
-        onMouseMove={handleMouseMove}
-        className="pinned-content"
-      >
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse 70% 50% at 50% 40%, hsl(217 91% 60% / 0.08) 0%, transparent 70%)",
+        }}
+      />
+
+      <div className="relative z-10 container mx-auto px-4 text-center max-w-4xl">
+        {/* Studio Badge */}
         <motion.div
-          style={{
-            scale: heroScale,
-            opacity: heroOpacity,
-            filter: useTransform(heroBrightness, (v) => `brightness(${v})`),
-          }}
-          className="absolute inset-0 flex items-center justify-center"
+          initial={{ opacity: 0, y: -16, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="mb-6 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-secondary/80 border border-border/70 text-xs font-mono text-muted-foreground shadow-sm backdrop-blur-md"
         >
-          {/* Animated Gradient mesh background — parallax layer */}
-          <motion.div
-            style={{
-              x: meshX,
-              y: meshY,
-              scale: meshScale,
-              opacity: meshOpacity,
-            }}
-            className="absolute inset-0 gradient-mesh"
-          />
-
-          {/* Dot grid — parallax layer */}
-          <motion.div
-            style={{
-              x: dotX,
-              y: useTransform(
-                [dotY, dotGridY] as any,
-                ([dY, gY]: number[]) => dY + gY
-              ),
-              opacity: dotGridOpacity,
-            }}
-            className="absolute inset-[-20px] dot-grid"
-          />
-
-          {/* Ember particles — rising from the ashes */}
-          <EmberParticles />
-
-          {/* Subtle radial gradient from center */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background:
-                "radial-gradient(circle at 50% 40%, hsl(15 90% 55% / 0.06) 0%, transparent 60%)",
-            }}
-          />
-
-          <div className="relative z-10 container mx-auto px-4 text-center max-w-4xl pt-16">
-            {/* Badge */}
-            <motion.div
-              style={{ scale: badgeScale, opacity: badgeOpacity }}
-              className="mb-8"
-            >
-              <span className="inline-flex items-center gap-2 text-[11px] font-semibold text-primary/80 tracking-widest uppercase bg-primary/5 border border-primary/10 rounded-full px-4 py-1.5 shadow-sm backdrop-blur-sm">
-                <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                Premium Digital Studio
-              </span>
-            </motion.div>
-
-            {/* Scroll-reveal headline */}
-            <div className="mb-8 overflow-hidden py-2">
-              {/* Semantic H1 for SEO and Screen Readers */}
-              <h1 className="sr-only">
-                Tenazity is a premium freelance digital studio. We design and build custom digital products, SaaS MVPs, and growth engines that work.
-              </h1>
-
-              {/* Visual-only animated text for users */}
-              <ScrollRevealText
-                text="We design & build digital products that work."
-                className="text-4xl sm:text-5xl md:text-6xl lg:text-[5rem] font-bold tracking-tight leading-[1.05]"
-                highlightWords={["digital"]}
-                highlightClass="text-gradient-accent"
-                scrollRange={[0, 0.35]}
-              />
-            </div>
-
-            {/* Subtitle + CTA — fade in with scroll */}
-            <motion.div style={{ opacity: contentOpacity, y: contentY }}>
-              <p className="text-base md:text-lg text-muted-foreground max-w-xl mx-auto mb-10 leading-relaxed font-light">
-                Tenazity is a digital studio that turns ideas into high-performance
-                websites, web apps, and growth engines — from first pixel to first
-                million users.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <MagneticButton href="#work">
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="border-border/60 text-foreground hover:bg-secondary font-medium text-sm px-8 h-12 rounded-full transition-all duration-300 hover:scale-105"
-                  >
-                    See Our Work
-                  </Button>
-                </MagneticButton>
-                <MagneticButton href="#contact">
-                  <Button
-                    size="lg"
-                    className="bg-primary text-primary-foreground hover:bg-primary/90 font-medium text-sm px-8 h-12 rounded-full glow-subtle shine-sweep transition-all duration-300 hover:scale-105"
-                  >
-                    Start a Project <ArrowRight className="ml-2" size={16} />
-                  </Button>
-                </MagneticButton>
-              </div>
-            </motion.div>
-          </div>
+          <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+          <span>Bespoke Digital Studio</span>
+          <span className="text-border">·</span>
+          <span className="text-foreground font-semibold">Tenazity</span>
         </motion.div>
 
-        {/* Bottom fade */}
-        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background via-background/80 to-transparent pointer-events-none z-20" />
+        {/* Headline */}
+        <div className="mb-6">
+          <h1 className="sr-only">
+            Tenazity is a premium digital studio. We design and build custom digital products, SaaS MVPs, and growth engines that work.
+          </h1>
+          <ScrollRevealText
+            text="We design & build digital products that work."
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.06] justify-center"
+            highlightWords={["digital", "products"]}
+            highlightClass="text-gradient-accent drop-shadow-sm"
+          />
+        </div>
+
+        {/* Subtitle */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.25, ease: "easeOut" }}
+          className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed font-light"
+        >
+          Tenazity turns ambitious concepts into high-performance web apps, SaaS MVPs, and automated growth engines — designed to convert visitors into loyal clients.
+        </motion.p>
+
+        {/* CTA Button Group */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.35, ease: "easeOut" }}
+          className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12"
+        >
+          <MagneticButton href="#contact">
+            <Button
+              size="lg"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold text-base px-8 h-13 rounded-full glow-subtle shine-sweep transition-all duration-300 hover:scale-105 shadow-xl cursor-pointer"
+            >
+              Start a Project <ArrowRight className="ml-2" size={18} />
+            </Button>
+          </MagneticButton>
+
+          <MagneticButton href="#work">
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-border/80 bg-card/60 backdrop-blur-md text-foreground hover:bg-secondary/80 font-medium text-base px-8 h-13 rounded-full transition-all duration-300 hover:scale-105 cursor-pointer flex items-center gap-2"
+            >
+              <Sparkles size={16} className="text-primary" />
+              Explore Live Work
+            </Button>
+          </MagneticButton>
+        </motion.div>
+
+        {/* Clean Callout Banner */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.45 }}
+          className="inline-flex flex-wrap items-center justify-center gap-4 sm:gap-8 px-6 py-3.5 rounded-2xl bg-card/60 border border-border/70 backdrop-blur-xl shadow-lg text-xs sm:text-sm"
+        >
+          <div className="flex items-center gap-2 text-foreground font-medium">
+            <Flame size={15} className="text-primary" />
+            <span>2 Sprint Slots Open for Q3</span>
+          </div>
+          <div className="hidden sm:block w-1 h-1 rounded-full bg-border" />
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <Clock size={15} className="text-primary" />
+            <span>2-3 Week Fast-Track Delivery</span>
+          </div>
+          <div className="hidden sm:block w-1 h-1 rounded-full bg-border" />
+          <div className="flex items-center gap-2 text-emerald-400 font-medium">
+            <CheckCircle2 size={15} className="text-emerald-400" />
+            <span>100% Bespoke Code</span>
+          </div>
+        </motion.div>
       </div>
+
+      {/* Bottom fade into next section */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background via-background/80 to-transparent pointer-events-none z-20" />
     </section>
   );
 };

@@ -1,6 +1,6 @@
-import { useRef, useState } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { Zap, Palette, Terminal, Server, ArrowRight } from "lucide-react";
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Zap, Palette, Terminal, Server, ArrowRight, ShieldCheck } from "lucide-react";
 import ScrollRevealText from "@/components/ui/ScrollRevealText";
 
 const values = [
@@ -8,25 +8,25 @@ const values = [
     icon: Zap,
     title: "Performance & SEO First",
     description:
-      "Every custom web app is optimized for speed and technical SEO. Fast load times, smooth interactions, and clean React code that scales effortlessly.",
+      "Every custom web app is optimized for speed and technical SEO. Sub-second load times, smooth 60fps interactions, and clean React code that scales effortlessly.",
   },
   {
     icon: Palette,
     title: "Premium UI/UX Design",
     description:
-      "We don't just make things look good — we design bespoke interfaces that guide users, build trust, and drive conversions for your freelance or agency business.",
+      "We don't just make things look good — we design bespoke interfaces that guide users, establish deep trust, and drive high-converting actions for your business.",
   },
   {
     icon: Server,
-    title: "Scalable Architecture",
+    title: "Scalable Cloud Architecture",
     description:
-      "We build backend systems designed to grow with you. From database design to serverless APIs, our architecture handles high traffic with ease.",
+      "We build backend systems engineered to grow with you. From resilient PostgreSQL schemas to serverless APIs, our architecture handles high traffic with ease.",
   },
   {
     icon: Terminal,
-    title: "Modern Tech Stack",
+    title: "Modern Battle-Tested Stack",
     description:
-      "React, Next.js, TypeScript, Go, Python, Node — our web developers use battle-tested tools and stay current with industry standards.",
+      "React, Next.js, TypeScript, Go, Python, Node, Tailwind CSS — our developers use battle-tested tools and stay current with industry-leading standards.",
   },
 ];
 
@@ -35,207 +35,112 @@ const techStack = [
   "TypeScript",
   "Next.js",
   "Tailwind CSS",
-  "Go",
+  "Node.js",
   "Python",
   "FastAPI",
-  "Docker",
   "PostgreSQL",
+  "Docker",
   "Framer Motion",
+  "AWS",
+  "GraphQL",
 ];
 
 const TrustSection = () => {
-  const sectionRef = useRef<HTMLElement>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 80,
-    damping: 30,
-  });
-
-  // Scroll-speed-linked tech marquee
-  const marqueeOffset = useSpring(
-    useTransform(scrollYProgress, [0, 1], [0, -150]),
-    { stiffness: 60, damping: 30 }
-  );
-
-  // Value items — each gets a scroll-linked entrance
-  const itemRanges = [
-    [0.1, 0.3],
-    [0.2, 0.4],
-    [0.3, 0.5],
-    [0.4, 0.6],
-  ];
-
   return (
-    <section ref={sectionRef} className="py-24 lg:py-32 bg-secondary/20 relative overflow-hidden">
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')] opacity-[0.02] mix-blend-overlay pointer-events-none" />
-
+    <section className="py-24 lg:py-32 bg-secondary/10 relative overflow-hidden border-t border-border/40">
       <div className="container mx-auto px-4 relative z-10">
-        <div className="flex flex-col lg:flex-row gap-16 lg:gap-24">
-
+        <div className="flex flex-col lg:flex-row gap-12 lg:gap-20">
           {/* Left Column - Sticky Header */}
           <div className="lg:w-1/3">
-            <div className="sticky top-32">
-              <div>
-                <motion.p
-                  style={{
-                    opacity: useTransform(smoothProgress, [0.05, 0.15], [0, 1]),
-                    x: useTransform(smoothProgress, [0.05, 0.15], [-20, 0]),
-                  }}
-                  className="text-primary text-xs font-semibold tracking-widest uppercase mb-4"
-                >
-                  Our Approach
-                </motion.p>
-                <ScrollRevealText
-                  text="Why work with us."
-                  className="text-4xl md:text-5xl font-bold tracking-tight mb-6"
-                  scrollRange={[0, 0.5]}
-                />
-                <motion.p
-                  style={{
-                    opacity: useTransform(smoothProgress, [0.1, 0.25], [0, 1]),
-                    y: useTransform(smoothProgress, [0.1, 0.25], [15, 0]),
-                  }}
-                  className="text-muted-foreground text-base font-light leading-relaxed mb-8"
-                >
-                  We treat every project as if it were our own startup. No cutting corners, no generic templates. Just premium engineering and thoughtful design.
-                </motion.p>
-                <motion.a
-                  href="#contact"
-                  style={{
-                    opacity: useTransform(smoothProgress, [0.15, 0.3], [0, 1]),
-                  }}
-                  className="inline-flex items-center gap-2 text-sm font-semibold hover:text-primary transition-colors group"
-                >
-                  Start a conversation
-                  <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                </motion.a>
+            <div className="lg:sticky lg:top-32">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="h-[2px] w-12 bg-primary rounded-full" />
+                <span className="text-primary text-xs font-semibold tracking-widest uppercase">
+                  Our Philosophy
+                </span>
               </div>
+              <ScrollRevealText
+                text="Why ambitious founders work with us."
+                className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-6"
+                highlightWords={["work", "with", "us."]}
+                highlightClass="text-gradient-accent"
+              />
+              <p className="text-muted-foreground text-base font-light leading-relaxed mb-8">
+                We treat every project as if it were our own startup. No cutting corners, no generic templates. Just obsessive craft, high-speed execution, and clean code.
+              </p>
+              <a
+                href="#contact"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary/80 transition-colors group cursor-pointer"
+              >
+                Schedule an intro call
+                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              </a>
             </div>
           </div>
 
-          {/* Right Column - Scroll-animated List */}
+          {/* Right Column - Value Items */}
           <div className="lg:w-2/3">
-            <div className="flex flex-col">
+            <div className="flex flex-col divide-y divide-border/40">
               {values.map((v, index) => (
-                <ValueItem
+                <motion.div
                   key={v.title}
-                  value={v}
-                  index={index}
-                  progress={smoothProgress}
-                  range={itemRanges[index] as [number, number]}
-                  hoveredIndex={hoveredIndex}
-                  setHoveredIndex={setHoveredIndex}
-                />
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.45, delay: index * 0.1 }}
+                  onMouseEnter={() => setHoveredIndex(index)}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                  className={`group relative p-6 sm:p-8 transition-all duration-300 rounded-xl cursor-default ${
+                    hoveredIndex !== null && hoveredIndex !== index ? "opacity-50" : "opacity-100"
+                  } ${hoveredIndex === index ? "bg-card/40 shadow-lg" : ""}`}
+                >
+                  <div className="flex flex-col sm:flex-row gap-5 sm:gap-6 sm:items-center">
+                    <div className="w-12 h-12 rounded-2xl bg-card border border-border/60 flex items-center justify-center shrink-0 group-hover:bg-primary/15 group-hover:border-primary/40 group-hover:shadow-[0_0_16px_hsl(15_90%_55%/0.2)] transition-all duration-300">
+                      <v.icon className="text-muted-foreground group-hover:text-primary transition-colors duration-300" size={22} />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold mb-1.5 tracking-tight group-hover:text-primary transition-colors">
+                        {v.title}
+                      </h3>
+                      <p className="text-muted-foreground text-sm font-light leading-relaxed max-w-xl">
+                        {v.description}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
               ))}
             </div>
           </div>
         </div>
 
-        {/* Tech Stack Marquee (Bottom) */}
-        <motion.div
-          style={{
-            opacity: useTransform(smoothProgress, [0.5, 0.65], [0, 1]),
-            y: useTransform(smoothProgress, [0.5, 0.65], [30, 0]),
-          }}
-          className="mt-32 border-t border-border/40 pt-16"
-        >
-          <p className="text-center text-[10px] font-semibold text-muted-foreground/40 uppercase tracking-widest mb-10">
-            Powered by modern technologies
+        {/* Tech Stack Marquee */}
+        <div className="mt-24 border-t border-border/40 pt-14">
+          <p className="text-center text-xs font-semibold text-muted-foreground/60 uppercase tracking-widest mb-8">
+            Engineered with modern, industry-standard technologies
           </p>
 
           <div className="overflow-hidden relative max-w-5xl mx-auto">
-            <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-background via-background/80 to-transparent z-10" />
-            <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-background via-background/80 to-transparent z-10" />
-            <motion.div
-              style={{ x: marqueeOffset }}
-              className="flex marquee opacity-60 hover:opacity-100 transition-opacity duration-500"
-            >
+            <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-background via-background/80 to-transparent z-10 pointer-events-none" />
+            <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-background via-background/80 to-transparent z-10 pointer-events-none" />
+            <div className="flex marquee opacity-70 hover:opacity-100 transition-opacity duration-300">
               {[...techStack, ...techStack].map((tech, i) => (
                 <div
                   key={`${tech}-${i}`}
-                  className="flex-shrink-0 mx-8 flex items-center justify-center"
+                  className="shrink-0 mx-6 sm:mx-8 flex items-center justify-center"
                 >
-                  <span className="text-lg font-bold text-muted-foreground/30 whitespace-nowrap tracking-tight">
+                  <span className="text-base sm:text-lg font-bold text-muted-foreground/50 hover:text-primary whitespace-nowrap tracking-tight transition-colors cursor-default">
                     {tech}
                   </span>
                 </div>
               ))}
-            </motion.div>
+            </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
 };
-
-function ValueItem({
-  value,
-  index,
-  progress,
-  range,
-  hoveredIndex,
-  setHoveredIndex,
-}: {
-  value: typeof values[0];
-  index: number;
-  progress: any;
-  range: [number, number];
-  hoveredIndex: number | null;
-  setHoveredIndex: (i: number | null) => void;
-}) {
-  // Scroll-linked entrance from the right with rotation
-  const x = useTransform(progress, [range[0], range[1]], [40, 0]);
-  const opacity = useTransform(progress, [range[0], range[1]], [0, 1]);
-  const rotate = useTransform(progress, [range[0], range[1]], [2, 0]);
-
-  // Gradient underline draw — scroll-linked
-  const underlineScale = useTransform(progress, [range[0] + 0.05, range[1]], [0, 1]);
-
-  return (
-    <motion.div
-      style={{
-        x,
-        opacity,
-        rotate,
-      }}
-      onMouseEnter={() => setHoveredIndex(index)}
-      onMouseLeave={() => setHoveredIndex(null)}
-      className={`group relative p-8 border-b border-border/40 transition-all duration-500 cursor-default ${
-        hoveredIndex !== null && hoveredIndex !== index ? 'opacity-40' : 'opacity-100'
-      }`}
-    >
-      {/* Gradient background on hover */}
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-lg pointer-events-none -z-10" />
-
-      {/* Scroll-linked underline */}
-      <motion.div
-        className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-primary to-primary/0"
-        style={{ scaleX: underlineScale, originX: 0 }}
-      />
-
-      <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 sm:items-center">
-        <motion.div
-          className="w-12 h-12 rounded-2xl bg-card border border-border/50 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/10 group-hover:border-primary/30 transition-all duration-500"
-          whileHover={{ scale: 1.15, rotate: 5 }}
-          transition={{ type: "spring", stiffness: 300, damping: 15 }}
-        >
-          <value.icon className="text-muted-foreground group-hover:text-primary transition-colors duration-500" size={20} />
-        </motion.div>
-        <div>
-          <h3 className="text-xl font-bold mb-2 tracking-tight">{value.title}</h3>
-          <p className="text-muted-foreground text-sm font-light leading-relaxed max-w-xl">
-            {value.description}
-          </p>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
 
 export default TrustSection;

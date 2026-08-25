@@ -28,7 +28,7 @@ export default function ParallaxLayer({
   });
 
   const rawY = useTransform(scrollYProgress, [0, 1], [speed * 100, speed * -100]);
-  const y = useSpring(rawY, { stiffness: 80, damping: 30 });
+  const y = useSpring(rawY, { stiffness: 400, damping: 40, restDelta: 0.001 });
 
   const rawX = useTransform(
     scrollYProgress,
@@ -36,7 +36,7 @@ export default function ParallaxLayer({
     [horizontalSpeed * 50, horizontalSpeed * -50]
   );
   const x = horizontal
-    ? useSpring(rawX, { stiffness: 80, damping: 30 })
+    ? useSpring(rawX, { stiffness: 400, damping: 40, restDelta: 0.001 })
     : undefined;
 
   return (

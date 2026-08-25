@@ -11,8 +11,8 @@ const sections = [
 export default function ScrollProgress() {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
+    stiffness: 400,
+    damping: 40,
     restDelta: 0.001,
   });
 
@@ -20,12 +20,11 @@ export default function ScrollProgress() {
     <div className="fixed top-0 left-0 right-0 z-[9999] pointer-events-none">
       {/* Top progress bar with Phoenix/Ignition fire gradient */}
       <motion.div
-        className="h-[3px] w-full origin-left"
+        className="h-[2px] w-full origin-left opacity-85"
         style={{
           scaleX,
           background:
-            "linear-gradient(90deg, hsl(0 85% 50%), hsl(15 90% 55%), hsl(35 95% 55%), hsl(45 100% 60%))",
-          boxShadow: "0 0 16px hsl(15 90% 55% / 0.6), 0 0 32px hsl(40 95% 55% / 0.3)",
+            "linear-gradient(90deg, #7393A7, #96ADC0, #B8A9C9)",
         }}
       />
     </div>

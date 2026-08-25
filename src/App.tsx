@@ -6,6 +6,7 @@ import PillarsSection from "./components/PillarsSection";
 import ProcessSection from "./components/ProcessSection";
 import TrustSection from "./components/TrustSection";
 import PortfolioSection from "./components/PortfolioSection";
+import TestimonialsSection from "./components/TestimonialsSection";
 import LabsSection from "./components/LabsSection";
 import FAQSection from "./components/FAQSection";
 import ContactSection from "./components/ContactSection";
@@ -37,6 +38,7 @@ const App = () => (
                 <ProcessSection />
                 <TrustSection />
                 <PortfolioSection />
+                <TestimonialsSection />
                 <LabsSection />
                 <FAQSection />
                 <ContactSection />

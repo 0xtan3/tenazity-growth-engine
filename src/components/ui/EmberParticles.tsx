@@ -14,20 +14,20 @@ interface Ember {
   flickerOffset: number;
 }
 
-const EMBER_COLORS = [15, 25, 35, 40, 10]; // Warm hues: deep red → orange → gold
+const EMBER_COLORS = [210, 220, 200, 260, 40]; // Soft muted palette: mist blue, soft gray, slate, pearl
 
 function createEmber(canvasWidth: number, canvasHeight: number): Ember {
   return {
     x: Math.random() * canvasWidth,
     y: canvasHeight + Math.random() * 40,
-    size: Math.random() * 2.5 + 0.8,
-    opacity: Math.random() * 0.4 + 0.15,
-    speed: Math.random() * 0.6 + 0.2,
-    drift: (Math.random() - 0.5) * 0.4,
-    driftSpeed: Math.random() * 0.002 + 0.001,
+    size: Math.random() * 1.8 + 0.6,
+    opacity: Math.random() * 0.2 + 0.05,
+    speed: Math.random() * 0.4 + 0.15,
+    drift: (Math.random() - 0.5) * 0.3,
+    driftSpeed: Math.random() * 0.0015 + 0.0008,
     hue: EMBER_COLORS[Math.floor(Math.random() * EMBER_COLORS.length)],
     life: 0,
-    maxLife: Math.random() * 400 + 200,
+    maxLife: Math.random() * 450 + 250,
     flickerOffset: Math.random() * Math.PI * 2,
   };
 }

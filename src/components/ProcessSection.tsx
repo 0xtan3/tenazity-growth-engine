@@ -1,218 +1,169 @@
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { Search, PenTool, Code, Rocket, Check } from "lucide-react";
-import { useRef } from "react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Search, PenTool, Code, Rocket, Check, ArrowRight } from "lucide-react";
 import ScrollRevealText from "@/components/ui/ScrollRevealText";
-import CountUp from "@/components/ui/CountUp";
 
 const processSteps = [
   {
     step: "01",
-    title: "Discovery & Strategy",
-    description: "We dive deep into your business goals, target audience, and technical requirements to architect a scalable solution.",
+    title: "Discovery & Architecture",
+    tagline: "Weeks 1",
+    description:
+      "We dive deep into your target audience, business goals, and technical requirements. We map out data models, user flows, and tech stacks to build a bulletproof roadmap.",
+    details: ["Competitive audit & tech spec", "Data schema & API architecture", "Milestone timeline & scoping"],
     icon: Search,
   },
   {
     step: "02",
-    title: "Design & Prototyping",
-    description: "We craft bespoke, conversion-optimized UI/UX designs and interactive prototypes to visualize the final product.",
+    title: "Interactive Prototyping",
+    tagline: "Weeks 1-2",
+    description:
+      "We craft high-fidelity Figma prototypes with real user flows, micro-interactions, and conversion psychology. You experience the complete app before development begins.",
+    details: ["High-fidelity Figma prototypes", "Design system & component library", "Interactive usability feedback"],
     icon: PenTool,
   },
   {
     step: "03",
-    title: "Agile Development",
-    description: "Our engineers build your product using modern, battle-tested frameworks, delivering fast iterations and clean code.",
+    title: "Full-Stack Development",
+    tagline: "Weeks 2-4",
+    description:
+      "We build your product using modern, battle-tested frameworks (React, Next.js, TypeScript). Fast 2-day sprint demos keep you in the loop every step of the way.",
+    details: ["Clean, type-safe codebases", "Responsive across all viewports", "Automated tests & CI/CD pipeline"],
     icon: Code,
   },
   {
     step: "04",
-    title: "Launch & Maintenance",
-    description: "We deploy your product to production and handle the infrastructure. We stay by your side to ensure your product runs smoothly.",
+    title: "Launch & Growth Engine",
+    tagline: "Week 4+",
+    description:
+      "We deploy to global CDNs, configure production monitoring, and optimize technical SEO. We stay with you post-launch to ensure high performance and zero downtime.",
+    details: ["Zero-downtime deployment", "Analytics & SEO configuration", "Ongoing maintenance & feature scaling"],
     icon: Rocket,
   },
 ];
 
 const ProcessSection = () => {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end end"],
-  });
-
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  });
-
-  // Ignition line width — scroll-driven from 0% to 100%
-  const lineWidth = useTransform(smoothProgress, [0.15, 0.9], [0, 100]);
-
-  // Step activation thresholds
-  const stepRanges = [
-    [0.15, 0.35],  // Step 1
-    [0.35, 0.55],  // Step 2
-    [0.55, 0.75],  // Step 3
-    [0.75, 0.95],  // Step 4
-  ];
+  const [activeStep, setActiveStep] = useState(0);
 
   return (
-    <section ref={sectionRef} className="pinned-section" style={{ height: "350vh" }}>
-      <div className="pinned-content flex-col py-20">
-        <div className="absolute inset-0 bg-secondary/5 pointer-events-none" />
+    <section id="process" className="py-24 lg:py-32 bg-secondary/15 relative overflow-hidden border-t border-border/40">
+      {/* Background radial atmosphere */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent pointer-events-none" />
 
-        <div className="container mx-auto px-4 relative z-10 w-full">
-          {/* Header */}
-          <div className="max-w-2xl mb-16 md:mb-24">
-            <motion.div
-              style={{
-                opacity: useTransform(smoothProgress, [0, 0.1], [0, 1]),
-              }}
-              className="flex items-center gap-2 mb-4"
-            >
-              <motion.div
-                style={{
-                  width: useTransform(smoothProgress, [0.02, 0.12], [0, 48]),
-                }}
-                className="h-[1px] bg-primary"
-              />
-              <span className="text-sm font-semibold uppercase tracking-widest text-primary">How We Work</span>
-            </motion.div>
-            <ScrollRevealText
-              text="A proven process for predictable excellence."
-              className="text-3xl md:text-5xl font-bold tracking-tight leading-tight"
-              scrollRange={[0, 0.5]}
-            />
+      <div className="container mx-auto px-4 relative z-10 w-full">
+        {/* Header */}
+        <div className="max-w-3xl mb-16 md:mb-20">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="h-[2px] w-12 bg-primary rounded-full" />
+            <span className="text-xs font-semibold uppercase tracking-widest text-primary">
+              Our 4-Step Framework
+            </span>
           </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 relative">
-            {/* Scroll-driven ignition line */}
-            <div className="hidden lg:block absolute top-12 left-[10%] right-[10%] h-[2px]">
-              {/* Background track */}
-              <div className="absolute inset-0 bg-border/30 rounded-full" />
-              {/* Animated fill */}
-              <motion.div
-                className="absolute inset-y-0 left-0 rounded-full"
-                style={{
-                  width: useTransform(lineWidth, (v) => `${v}%`),
-                  background: "linear-gradient(90deg, hsl(15 90% 55%), hsl(40 95% 55%))",
-                  boxShadow: "0 0 12px hsl(15 90% 55% / 0.4), 0 0 24px hsl(40 95% 55% / 0.2)",
-                }}
-              />
-            </div>
-
-            {processSteps.map((item, index) => (
-              <StepCard
-                key={item.step}
-                item={item}
-                index={index}
-                progress={smoothProgress}
-                range={stepRanges[index] as [number, number]}
-              />
-            ))}
-          </div>
+          <ScrollRevealText
+            text="A proven process for predictable excellence."
+            className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-tight mb-4"
+            highlightWords={["predictable", "excellence."]}
+            highlightClass="text-gradient-accent"
+          />
+          <p className="text-base sm:text-lg text-muted-foreground font-light leading-relaxed">
+            No guesswork. No radio silence. We run an agile, transparent execution model that takes your product from concept to production in weeks, not months.
+          </p>
         </div>
+
+        {/* Desktop & Tablet: Interactive Step Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 relative mb-12">
+          {processSteps.map((item, index) => {
+            const isActive = activeStep === index;
+            const Icon = item.icon;
+
+            return (
+              <motion.div
+                key={item.step}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45, delay: index * 0.1 }}
+                onClick={() => setActiveStep(index)}
+                className={`cursor-pointer rounded-2xl p-6 transition-all duration-300 relative border ${
+                  isActive
+                    ? "bg-card/90 border-primary/50 shadow-xl shadow-primary/10 -translate-y-1.5"
+                    : "bg-card/40 border-border/50 hover:border-border hover:bg-card/60"
+                }`}
+              >
+                {/* Active Indicator Top Bar */}
+                {isActive && (
+                  <div className="absolute top-0 left-6 right-6 h-[2px] bg-gradient-to-r from-primary to-amber-400 rounded-full" />
+                )}
+
+                <div className="flex items-center justify-between mb-6">
+                  <div
+                    className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors duration-300 ${
+                      isActive
+                        ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25"
+                        : "bg-secondary text-muted-foreground"
+                    }`}
+                  >
+                    <Icon size={22} />
+                  </div>
+                  <span
+                    className={`text-xs font-mono font-bold px-2.5 py-1 rounded-full border ${
+                      isActive
+                        ? "bg-primary/15 text-primary border-primary/30"
+                        : "bg-secondary/60 text-muted-foreground/60 border-border/30"
+                    }`}
+                  >
+                    {item.step}
+                  </span>
+                </div>
+
+                <div className="text-xs text-primary font-medium tracking-wide uppercase mb-1">
+                  {item.tagline}
+                </div>
+                <h3 className="text-xl font-bold mb-3 tracking-tight text-foreground">
+                  {item.title}
+                </h3>
+                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed font-light mb-4">
+                  {item.description}
+                </p>
+
+                {/* Micro checklist */}
+                <div className="space-y-1.5 pt-3 border-t border-border/40">
+                  {item.details.map((detail, di) => (
+                    <div key={di} className="flex items-center gap-1.5 text-[11px] text-muted-foreground/80">
+                      <Check size={12} className={isActive ? "text-primary shrink-0" : "text-muted-foreground/40 shrink-0"} />
+                      <span>{detail}</span>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* CTA banner under process */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="rounded-2xl p-6 sm:p-8 bg-gradient-to-r from-card/80 via-card/50 to-primary/10 border border-border/60 backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-6"
+        >
+          <div>
+            <h4 className="text-lg sm:text-xl font-bold mb-1">Ready to launch your product?</h4>
+            <p className="text-sm text-muted-foreground font-light">
+              We provide fixed-scope estimates within 24 hours. Zero obligations.
+            </p>
+          </div>
+          <a
+            href="#contact"
+            className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-semibold px-6 py-3 rounded-xl text-sm hover:bg-primary/90 transition-all hover:scale-105 shadow-md shadow-primary/20 shrink-0 cursor-pointer"
+          >
+            Start Your Sprint <ArrowRight size={16} />
+          </a>
+        </motion.div>
       </div>
     </section>
   );
 };
-
-function StepCard({
-  item,
-  index,
-  progress,
-  range,
-}: {
-  item: typeof processSteps[0];
-  index: number;
-  progress: any;
-  range: [number, number];
-}) {
-  // Card entrance
-  const cardOpacity = useTransform(progress, [range[0] - 0.05, range[0] + 0.05], [0, 1]);
-  const cardY = useTransform(progress, [range[0] - 0.05, range[0] + 0.08], [30, 0]);
-
-  // Icon activation
-  const iconScale = useTransform(
-    progress,
-    [range[0], range[0] + 0.05, range[0] + 0.1],
-    [0.8, 1.2, 1]
-  );
-  const iconBorderColor = useTransform(
-    progress,
-    [range[0], range[0] + 0.1],
-    ["hsl(15 10% 14% / 0.5)", "hsl(15 90% 55% / 0.5)"]
-  );
-
-  // Active state — spotlight glow
-  const isActive = useTransform(
-    progress,
-    [range[0] - 0.05, range[0], range[1], range[1] + 0.05],
-    [0, 1, 1, 0.5]
-  );
-
-  // Pulse ring
-  const pulseScale = useTransform(progress, [range[0], range[0] + 0.08], [1, 2.5]);
-  const pulseOpacity = useTransform(progress, [range[0], range[0] + 0.08], [0.5, 0]);
-
-  // Completed state (green check)
-  const isCompleted = useTransform(progress, [range[1], range[1] + 0.05], [0, 1]);
-
-  return (
-    <motion.div
-      style={{
-        opacity: cardOpacity,
-        y: cardY,
-      }}
-      className="relative group"
-    >
-      {/* Active spotlight glow */}
-      <motion.div
-        style={{ opacity: isActive }}
-        className="absolute -inset-4 rounded-2xl spotlight-glow pointer-events-none -z-10"
-      />
-
-      <motion.div
-        className="w-16 h-16 rounded-full bg-background border border-border/50 flex items-center justify-center relative z-10 mb-8 transition-colors duration-300"
-        style={{
-          scale: iconScale,
-          borderColor: iconBorderColor,
-        }}
-      >
-        <item.icon size={24} className="text-muted-foreground group-hover:text-primary transition-colors" />
-
-        {/* Animated step number */}
-        <motion.div
-          style={{ opacity: useTransform(isCompleted, (v) => 1 - v) }}
-          className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-full shadow-lg"
-        >
-          <CountUp target={item.step} className="" duration={1} />
-        </motion.div>
-
-        {/* Completed checkmark */}
-        <motion.div
-          style={{ opacity: isCompleted, scale: isCompleted }}
-          className="absolute -top-2 -right-2 bg-emerald-500 text-white text-[10px] font-bold w-5 h-5 rounded-full shadow-lg flex items-center justify-center"
-        >
-          <Check size={12} strokeWidth={3} />
-        </motion.div>
-      </motion.div>
-
-      {/* Pulse ring on activation */}
-      <motion.div
-        className="absolute top-0 left-0 w-16 h-16 rounded-full border border-primary/40 pointer-events-none"
-        style={{
-          scale: pulseScale,
-          opacity: pulseOpacity,
-        }}
-      />
-
-      <h3 className="text-xl font-bold mb-3">{item.title}</h3>
-      <p className="text-muted-foreground text-sm leading-relaxed">
-        {item.description}
-      </p>
-    </motion.div>
-  );
-}
 
 export default ProcessSection;
