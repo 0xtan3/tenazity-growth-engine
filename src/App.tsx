@@ -6,9 +6,11 @@ import PillarsSection from "./components/PillarsSection";
 import ProcessSection from "./components/ProcessSection";
 import TrustSection from "./components/TrustSection";
 import PortfolioSection from "./components/PortfolioSection";
+import LabsSection from "./components/LabsSection";
 import FAQSection from "./components/FAQSection";
 import ContactSection from "./components/ContactSection";
 import Footer from "./components/Footer";
+import ScrollProgress from "./components/ui/ScrollProgress";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
@@ -22,6 +24,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <ScrollProgress />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={
@@ -34,6 +37,7 @@ const App = () => (
                 <ProcessSection />
                 <TrustSection />
                 <PortfolioSection />
+                <LabsSection />
                 <FAQSection />
                 <ContactSection />
               </main>
