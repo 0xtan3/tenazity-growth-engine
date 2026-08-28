@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
-import { Star, Quote, CheckCircle2, Building2, MapPin, ExternalLink } from "lucide-react";
+import { Star, CheckCircle2, MessageSquareQuote, MapPin, Globe2, MessageCircle, Quote, Building2, ExternalLink } from "lucide-react";
 import ScrollRevealText from "@/components/ui/ScrollRevealText";
+import TwinklingStars from "@/components/ui/TwinklingStars";
 
 const testimonials = [
   {
@@ -11,10 +12,10 @@ const testimonials = [
     website: "https://www.madraskitchen.co.nz/",
     avatar: "SK",
     rating: 5,
-    project: "Custom Web Architecture & Digital Menu System",
+    project: "Web Platform & Digital Menu",
     quote:
-      "Tenazity revamped our digital presence completely. Our online ordering and table booking flow is now lightning-fast, and our local Google search visibility in Auckland skyrocketed within 3 weeks of launch. Transparent communication and spotless execution throughout.",
-    tags: ["Restaurant Platform", "Local SEO", "High-Speed UX"],
+      "Tenazity completely transformed our online presence. The new ordering and table booking flow is incredibly fast, and our Google visibility in Auckland jumped within 3 weeks of going live. Communication was clear and honest the whole way through.",
+    tags: ["Restaurant Platform", "Local SEO", "Fast UX"],
   },
   {
     name: "Harish Sharma",
@@ -24,9 +25,9 @@ const testimonials = [
     website: "https://www.copperchimney.co.nz/",
     avatar: "HS",
     rating: 5,
-    project: "Brand Portal & Mobile Reservation Engine",
+    project: "Brand Site & Reservation Engine",
     quote:
-      "Working across timezones with Tenazity felt completely effortless. They understood our hospitality brand instantly and shipped a luxury, mobile-optimized website that handles hundreds of daily diner reservations without a hitch. Truly dependable engineers.",
+      "Working across timezones felt effortless. They understood our hospitality brand right away and delivered a beautiful, mobile-first website that handles hundreds of daily reservations without a hitch. Really dependable team.",
     tags: ["Next.js", "Brand Identity", "Mobile First"],
   },
   {
@@ -39,7 +40,7 @@ const testimonials = [
     rating: 5,
     project: "Fintech Dashboard MVP",
     quote:
-      "Most freelancers get lost in scope creep. Akilesh and the Tenazity team scoped our MVP accurately, ran tight 2-day sprint updates, and shipped production-ready TypeScript code in under 3 weeks. They think like technical founders, not just coders.",
+      "Most freelancers get lost in scope creep. Akilesh and the team scoped our MVP accurately, ran tight sprint updates, and shipped production-ready code in under 3 weeks. They think like technical founders, not just coders.",
     tags: ["React / TypeScript", "PostgreSQL", "2-Week Sprint"],
   },
   {
@@ -52,7 +53,7 @@ const testimonials = [
     rating: 5,
     project: "Patient Telehealth Portal",
     quote:
-      "The attention to detail in their UI/UX and micro-interactions is world-class. They translated complex patient data workflows into an intuitive Figma design system, and then built it pixel-for-pixel with zero performance drops.",
+      "The attention to detail in their design work is genuinely impressive. They took complex patient workflows and turned them into something intuitive and clean — and then built it pixel-for-pixel with zero performance issues.",
     tags: ["Figma Design System", "Cloud Backend", "Web Vitals 100"],
   },
   {
@@ -63,9 +64,9 @@ const testimonials = [
     website: null,
     avatar: "RN",
     rating: 5,
-    project: "B2B SaaS Landing Engine",
+    project: "B2B SaaS Landing Page",
     quote:
-      "Our conversion rate jumped by 38% after switching to the new landing page Tenazity built. The 60fps animations and instant sub-second load times made an immediate difference in client perception and sales demos.",
+      "Our conversion rate went up 38% after the new landing page. The smooth animations and instant load times made an immediate difference in how prospects perceived us during sales demos.",
     tags: ["Conversion Rate +38%", "Technical SEO", "Clean React"],
   },
   {
@@ -78,14 +79,15 @@ const testimonials = [
     rating: 5,
     project: "Supply Chain Analytics Dashboard",
     quote:
-      "Tenazity is our go-to engineering studio. They deploy robust code, configure automated CI/CD pipelines, and provide thoughtful technical guidance whenever we need to scale backend infrastructure.",
+      "Tenazity is our go-to engineering team. They write solid code, set up proper CI/CD, and give thoughtful technical advice whenever we need to scale. It feels like having a senior engineering partner on call.",
     tags: ["Full-Stack Architecture", "DevOps", "Ongoing Retainer"],
   },
 ];
 
 export default function TestimonialsSection() {
   return (
-    <section id="testimonials" className="py-24 lg:py-32 bg-secondary/15 relative overflow-hidden border-t border-border/40">
+    <section id="testimonials" className="py-24 lg:py-32 bg-secondary/10 relative overflow-hidden border-t border-border/40">
+      <TwinklingStars />
       {/* Background glow atmosphere */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[450px] bg-primary/5 rounded-full blur-[160px] pointer-events-none" />
 
@@ -95,17 +97,17 @@ export default function TestimonialsSection() {
           <div className="inline-flex items-center gap-2 mb-3">
             <span className="w-2 h-2 rounded-full bg-primary" />
             <span className="text-primary text-xs font-semibold tracking-widest uppercase">
-              Client Proof & Reviews
+              Client Reviews
             </span>
           </div>
           <ScrollRevealText
-            text="Trusted by ambitious founders and business owners."
+            text="What our clients say."
             className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-4 justify-center"
-            highlightWords={["Trusted", "by", "ambitious", "founders"]}
+            highlightWords={["clients", "say."]}
             highlightClass="text-gradient-accent"
           />
           <p className="text-muted-foreground text-base sm:text-lg font-light max-w-xl mx-auto leading-relaxed">
-            Real feedback from companies in New Zealand and India who partnered with us to design, engineer, and scale their digital products.
+            Real feedback from teams in New Zealand and India who've worked with us to build and scale their products.
           </p>
         </div>
 
@@ -118,7 +120,7 @@ export default function TestimonialsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.45, delay: index * 0.08 }}
-              className="rounded-2xl p-6 sm:p-7 bg-card/60 border border-border/60 backdrop-blur-md hover:border-primary/40 hover:bg-card/90 transition-all duration-300 flex flex-col justify-between glow-border-wrapper shadow-lg hover:-translate-y-1"
+              className="rounded-3xl p-6 sm:p-7 glass-card backdrop-blur-md hover:border-primary/40 hover:bg-white/5 transition-all duration-300 flex flex-col justify-between glow-border-wrapper shadow-lg hover:-translate-y-1"
             >
               <div>
                 {/* Rating & Verified Badge */}
@@ -128,14 +130,14 @@ export default function TestimonialsSection() {
                       <Star key={i} size={14} className="fill-amber-400 text-amber-400" />
                     ))}
                   </div>
-                  <span className="inline-flex items-center gap-1 text-[10px] font-mono text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-2 py-0.5 rounded">
+                  <span className="inline-flex items-center gap-1 text-[10px] font-mono text-emerald-400 bg-emerald-400/10 border border-emerald-400/30 px-2 py-0.5 rounded">
                     <CheckCircle2 size={10} /> Verified Client
                   </span>
                 </div>
 
                 {/* Project Tag */}
                 <div className="text-[11px] font-mono text-primary font-medium mb-3">
-                  Scope: {t.project}
+                  Project: {t.project}
                 </div>
 
                 {/* Quote Body */}
@@ -147,7 +149,7 @@ export default function TestimonialsSection() {
               {/* Author Info */}
               <div className="pt-4 border-t border-border/40 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-secondary border border-border/70 flex items-center justify-center font-bold text-xs text-foreground shrink-0 shadow-sm">
+                  <div className="w-10 h-10 rounded-full glass-card flex items-center justify-center font-bold text-xs text-foreground shrink-0 shadow-sm">
                     {t.avatar}
                   </div>
                   <div>

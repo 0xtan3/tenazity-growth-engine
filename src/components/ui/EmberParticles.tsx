@@ -14,7 +14,7 @@ interface Ember {
   flickerOffset: number;
 }
 
-const EMBER_COLORS = [210, 220, 200, 260, 40]; // Soft muted palette: mist blue, soft gray, slate, pearl
+const EMBER_COLORS = [183, 188, 192, 200, 0]; // Cyan/Teal (#00ADB5) and silver (#EEEEEE)
 
 function createEmber(canvasWidth: number, canvasHeight: number): Ember {
   return {

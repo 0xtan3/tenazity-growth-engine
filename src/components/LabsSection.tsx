@@ -1,13 +1,14 @@
 import { motion } from "framer-motion";
-import { Hammer, Timer, Wrench, ArrowUpRight, Sparkles } from "lucide-react";
+import { Hammer, Timer, ArrowUpRight } from "lucide-react";
 import ScrollRevealText from "@/components/ui/ScrollRevealText";
+import PopCodeRain from "@/components/ui/PopCodeRain";
 
 const labs = [
   {
     icon: Hammer,
     name: "Forge",
     description:
-      "Our freelance studio OS — complete project management, automated invoicing, milestone tracking, and client portals in one cohesive platform.",
+      "The tool we use to run Tenazity — project management, invoicing, milestone tracking, and client portals, all in one place. Built because nothing else worked the way we needed it to.",
     url: "https://forge.tenazity.com",
     status: "Live",
   },
@@ -15,7 +16,7 @@ const labs = [
     icon: Timer,
     name: "Chrono",
     description:
-      "A distraction-free focus timer built for deep work. Ambient soundscapes, session analytics, and minimalist keyboard shortcuts.",
+      "A distraction-free focus timer built for deep work. Ambient soundscapes, session tracking, and minimal keyboard shortcuts. We use it every day.",
     url: "https://chrono.tenazity.com",
     status: "Live",
   },
@@ -23,7 +24,9 @@ const labs = [
 
 const LabsSection = () => {
   return (
-    <section id="labs" className="py-24 lg:py-32 relative overflow-hidden bg-secondary/10 border-t border-border/40">
+    <section id="labs" className="py-24 lg:py-32 relative overflow-hidden bg-background border-t border-border/40">
+      <PopCodeRain />
+      
       <div className="relative container mx-auto px-4 z-10">
         <div className="mb-16 max-w-xl">
           <div className="flex items-center gap-2 mb-3">
@@ -33,13 +36,13 @@ const LabsSection = () => {
             </span>
           </div>
           <ScrollRevealText
-            text="Built by us, for us."
+            text="Our own products."
             className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-3"
-            highlightWords={["Built", "by", "us,"]}
+            highlightWords={["own", "products."]}
             highlightClass="text-gradient-accent"
           />
           <p className="text-muted-foreground max-w-lg text-sm sm:text-base leading-relaxed font-light">
-            We practice what we preach. These are proprietary products and experiments we build internally to solve our own workflows — proof that we ship real-world products.
+            We build our own tools to stay sharp — and to prove we ship real stuff, not just client work. These are products we use daily.
           </p>
         </div>
 
@@ -62,9 +65,9 @@ const LabsSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45, delay: index * 0.1 }}
-                className={`group block bg-card/60 backdrop-blur-md rounded-2xl border border-border/60 p-6 transition-all duration-300 h-full glow-border-wrapper flex flex-col justify-between ${
+                className={`group block glass-card backdrop-blur-md rounded-3xl border border-border/60 p-6 transition-all duration-300 h-full glow-border-wrapper flex flex-col justify-between ${
                   item.url
-                    ? "hover:border-primary/40 hover:bg-card/90 hover:-translate-y-1.5 hover:shadow-xl cursor-pointer"
+                    ? "hover:border-primary/40 hover:bg-white/5 hover:-translate-y-1.5 hover:shadow-xl cursor-pointer"
                     : "opacity-75 cursor-default"
                 }`}
               >
@@ -76,12 +79,12 @@ const LabsSection = () => {
                     <span
                       className={`inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider rounded-full px-3 py-1 ${
                         item.status === "Live"
-                          ? "text-emerald-400 bg-emerald-400/10 border border-emerald-400/25 shadow-sm"
-                          : "text-muted-foreground/80 bg-secondary/70 border border-border/40"
+                          ? "text-emerald-400 bg-emerald-400/10 border border-emerald-400/30 shadow-sm"
+                          : "text-muted-foreground/80 bg-secondary/50 border border-border/40"
                       }`}
                     >
                       {item.status === "Live" && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                       )}
                       {item.status}
                     </span>
@@ -91,7 +94,7 @@ const LabsSection = () => {
                     {item.name}
                     {item.url && (
                       <ArrowUpRight
-                        className="text-muted-foreground/40 group-hover:text-primary transition-colors group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
+                        className="text-muted-foreground/40 group-hover:text-primary transition-colors group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                         size={18}
                       />
                     )}

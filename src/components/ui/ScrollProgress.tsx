@@ -20,11 +20,12 @@ export default function ScrollProgress() {
     <div className="fixed top-0 left-0 right-0 z-[9999] pointer-events-none">
       {/* Top progress bar with Phoenix/Ignition fire gradient */}
       <motion.div
-        className="h-[2px] w-full origin-left opacity-85"
+        className="h-[3px] w-full origin-left"
         style={{
           scaleX,
           background:
-            "linear-gradient(90deg, #7393A7, #96ADC0, #B8A9C9)",
+            "linear-gradient(90deg, #8B5CF6, #EC4899, #A3E635)",
+          boxShadow: "0 0 14px rgba(236, 72, 153, 0.6)",
         }}
       />
     </div>

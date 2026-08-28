@@ -3,31 +3,32 @@ import { motion } from "framer-motion";
 import { PenTool, Code2, Cloud, ArrowUpRight, Check } from "lucide-react";
 import { useMagneticHover } from "@/hooks/useMagneticHover";
 import ScrollRevealText from "@/components/ui/ScrollRevealText";
+import FloatingGeometry from "@/components/ui/FloatingGeometry";
 
 const pillars = [
   {
     icon: PenTool,
-    title: "UI/UX & Prototyping",
+    title: "Design & Prototyping",
     tags: ["Figma", "User Research", "Interactive Prototypes", "Design Systems"],
     description:
-      "We design bespoke, intuitive interfaces that captivate users and establish credibility, visualizing the entire product before a single line of code is written.",
-    highlights: ["Pixel-perfect design systems", "High-fidelity clickable Figma", "Conversion-focused flows"],
+      "Before we write a single line of code, we design the entire product in Figma — clickable, high-fidelity, and ready for feedback. You'll see exactly what you're getting.",
+    highlights: ["Pixel-perfect design systems", "Clickable Figma prototypes", "Conversion-focused user flows"],
   },
   {
     icon: Code2,
     title: "Full-Stack Engineering",
     tags: ["React", "Next.js", "TypeScript", "Node.js", "Tailwind CSS"],
     description:
-      "We engineer lightning-fast, reactive web applications and SaaS platforms with clean component hierarchies, robust state management, and 60fps animations.",
-    highlights: ["Sub-second page load speeds", "Type-safe robust architecture", "Mobile & SEO optimized"],
+      "We write clean, fast, production-ready code. React frontends, robust backends, smooth animations — the kind of work that makes other developers nod in respect.",
+    highlights: ["Sub-second page loads", "Type-safe architecture", "Mobile & SEO optimized"],
   },
   {
     icon: Cloud,
     title: "Cloud & Scalability",
     tags: ["AWS", "PostgreSQL", "Serverless APIs", "Docker", "DevOps"],
     description:
-      "We architect secure, scalable backend backbones. From custom REST & GraphQL APIs to managed database clusters that handle traffic spikes with zero sweat.",
-    highlights: ["Auto-scaling cloud infrastructure", "Secure auth & payments", "99.9% uptime architecture"],
+      "Your app won't fall over when traffic spikes. We set up secure, auto-scaling infrastructure that handles growth without breaking a sweat.",
+    highlights: ["Auto-scaling infrastructure", "Secure auth & payments", "99.9% uptime"],
   },
 ];
 
@@ -39,7 +40,7 @@ function MagneticIcon({ icon: Icon }: { icon: typeof PenTool }) {
       style={{ x, y }}
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
-      className="w-14 h-14 rounded-2xl bg-secondary/80 border border-border/80 flex items-center justify-center group-hover:bg-primary/15 group-hover:border-primary/40 group-hover:shadow-[0_0_20px_hsl(15_90%_55%/0.2)] transition-all duration-300 cursor-pointer"
+      className="w-14 h-14 rounded-2xl glass-card flex items-center justify-center group-hover:bg-primary/10 group-hover:border-primary/40 group-hover:shadow-[0_0_20px_rgba(139,92,246,0.2)] transition-all duration-300 cursor-pointer"
     >
       <Icon className="text-muted-foreground group-hover:text-primary transition-colors duration-300" size={26} />
     </motion.div>
@@ -49,6 +50,8 @@ function MagneticIcon({ icon: Icon }: { icon: typeof PenTool }) {
 const PillarsSection = () => {
   return (
     <section id="services" className="py-24 lg:py-32 relative overflow-hidden bg-background">
+      <FloatingGeometry />
+      
       {/* Subtle background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-primary/5 rounded-full blur-[140px] pointer-events-none" />
 
@@ -58,18 +61,17 @@ const PillarsSection = () => {
           <div className="flex items-center gap-3 mb-4">
             <div className="h-[2px] w-12 bg-primary rounded-full" />
             <p className="text-primary text-xs font-semibold tracking-widest uppercase">
-              Core Capabilities
+              What We Do
             </p>
           </div>
           <ScrollRevealText
-            text="Built for scale, designed for impact."
+            text="Everything you need to ship a great product."
             className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-6"
-            highlightWords={["scale,", "impact."]}
+            highlightWords={["great", "product."]}
             highlightClass="text-gradient-accent"
           />
           <p className="text-base sm:text-lg text-muted-foreground leading-relaxed font-light">
-            We handle the full product lifecycle. By combining world-class UI/UX design,
-            elite engineering, and battle-tested cloud backends, we turn complex challenges into effortless digital experiences.
+            Design, engineering, and cloud — we handle the full stack so you can focus on your business. No handoffs to random freelancers, no context switching between agencies.
           </p>
         </div>
 
@@ -101,15 +103,15 @@ function PillarCard({
       transition={{ duration: 0.5, delay: index * 0.15, ease: [0.22, 1, 0.36, 1] }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="group relative glass-card glow-border-wrapper rounded-2xl p-8 flex flex-col justify-between transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10 border border-border/60 bg-card/40 backdrop-blur-xl"
+      className="group relative glass-card glow-border-wrapper rounded-3xl p-8 sm:p-10 flex flex-col justify-between transition-all duration-500 hover:-translate-y-2"
     >
       {/* Subtle glow behind card on hover */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-primary/8 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl pointer-events-none" />
 
       <div className="relative z-10">
         <div className="flex items-center justify-between mb-8">
           <MagneticIcon icon={pillar.icon} />
-          <div className="w-9 h-9 rounded-full border border-border/60 bg-background/50 flex items-center justify-center opacity-70 group-hover:opacity-100 group-hover:border-primary/40 group-hover:bg-primary/10 transition-all duration-300">
+          <div className="w-9 h-9 rounded-full glass-card flex items-center justify-center opacity-70 group-hover:opacity-100 group-hover:border-primary/40 group-hover:bg-primary/10 transition-all duration-300">
             <ArrowUpRight className="text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" size={18} />
           </div>
         </div>
@@ -136,7 +138,7 @@ function PillarCard({
         {pillar.tags.map((t) => (
           <span
             key={t}
-            className="text-[10px] font-medium tracking-wide text-muted-foreground/80 uppercase bg-secondary/50 border border-border/40 rounded-md px-2.5 py-1 group-hover:border-primary/20 transition-colors"
+            className="text-[10px] font-medium tracking-wide text-muted-foreground/80 uppercase glass-card rounded-md px-2.5 py-1 group-hover:border-primary/20 transition-colors"
           >
             {t}
           </span>

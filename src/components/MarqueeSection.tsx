@@ -13,7 +13,7 @@ const capabilities = [
 
 const MarqueeSection = () => {
   return (
-    <section className="py-8 border-y border-border/40 overflow-hidden bg-secondary/15 relative flex items-center">
+    <section className="py-8 border-y border-border/40 overflow-hidden bg-secondary/20 relative flex items-center">
       {/* Gradient masks for smooth fading at edges */}
       <div className="absolute left-0 top-0 bottom-0 w-24 md:w-48 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
       <div className="absolute right-0 top-0 bottom-0 w-24 md:w-48 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />

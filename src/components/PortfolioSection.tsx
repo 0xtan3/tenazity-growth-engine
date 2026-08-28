@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
-import { ArrowUpRight, Sparkles, ExternalLink, Globe2, ShieldCheck, MapPin } from "lucide-react";
+import { ArrowUpRight, Sparkles, ExternalLink, Globe2, MapPin } from "lucide-react";
 import ScrollRevealText from "@/components/ui/ScrollRevealText";
+import SparseParticles from "@/components/ui/SparseParticles";
 
 const featuredProducts = [
   {
@@ -8,23 +9,23 @@ const featuredProducts = [
     title: "Chrono",
     tagline: "Distraction-Free Focus & Flow Timer",
     description:
-      "An ambient focus timer designed to elevate deep work sessions. Features generative soundscapes, Pomodoro cycles, session tracking, and minimalist keyboard shortcuts.",
+      "An ambient focus timer we built for our own deep work sessions. Generative soundscapes, Pomodoro cycles, session tracking, and minimalist keyboard shortcuts.",
     url: "https://chrono.tenazity.com",
     tech: ["React", "TypeScript", "Tailwind CSS", "Web Audio API"],
     highlight: "Live Product",
-    gradient: "from-white/5 via-white/[0.02] to-transparent",
+    gradient: "from-primary/5 via-primary/[0.02] to-transparent",
     domain: "chrono.tenazity.com",
   },
   {
-    category: "Studio OS & Operations",
+    category: "Studio Operations",
     title: "Forge",
-    tagline: "Operating System for Freelance Studios",
+    tagline: "Our Studio Management Platform",
     description:
-      "An all-in-one studio management platform. Handles client onboarding, milestones, time tracking, invoice generation, and real-time project profitability.",
+      "The tool we use to run Tenazity. Client onboarding, milestones, time tracking, invoicing, and project profitability — all in one place.",
     url: "https://forge.tenazity.com",
     tech: ["React", "Next.js", "TypeScript", "Tailwind CSS", "PostgreSQL"],
     highlight: "Live Product",
-    gradient: "from-white/5 via-white/[0.02] to-transparent",
+    gradient: "from-primary/5 via-primary/[0.02] to-transparent",
     domain: "forge.tenazity.com",
   },
 ];
@@ -32,25 +33,26 @@ const featuredProducts = [
 const globalClients = [
   {
     name: "Madras Kitchen",
-    type: "Restaurant & Online Ordering Web Platform",
+    type: "Restaurant & Online Ordering Platform",
     location: "Auckland, New Zealand",
     url: "https://www.madraskitchen.co.nz/",
     domain: "madraskitchen.co.nz",
-    deliverables: "Custom Web Architecture, Local SEO Engine & Table Booking Flow",
+    deliverables: "Custom web architecture, local SEO engine, and table booking flow",
   },
   {
     name: "Copper Chimney",
-    type: "Premier Hospitality Brand & Mobile Experience",
+    type: "Hospitality Brand & Mobile Experience",
     location: "Christchurch, New Zealand",
     url: "https://www.copperchimney.co.nz/",
     domain: "copperchimney.co.nz",
-    deliverables: "Luxury Brand Portal, High-Speed Reservation Engine & Menu Systems",
+    deliverables: "Brand portal, high-speed reservation engine, and menu systems",
   },
 ];
 
 const PortfolioSection = () => {
   return (
     <section id="work" className="py-24 lg:py-32 bg-background relative overflow-hidden border-t border-border/40">
+      <SparseParticles />
       {/* Warm glow ambiance */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary/5 rounded-full blur-[160px] pointer-events-none" />
 
@@ -61,18 +63,18 @@ const PortfolioSection = () => {
             <div className="flex items-center gap-2 mb-4">
               <div className="h-[2px] w-12 bg-primary rounded-full" />
               <span className="text-primary text-xs font-semibold tracking-widest uppercase">
-                Featured Work & Products
+                Our Work
               </span>
             </div>
             <ScrollRevealText
-              text="Products designed with craft, built to scale."
+              text="Things we've built."
               className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight"
-              highlightWords={["built", "to", "scale."]}
+              highlightWords={["built."]}
               highlightClass="text-gradient-accent"
             />
           </div>
           <p className="text-muted-foreground text-base font-light leading-relaxed max-w-md md:text-right">
-            We build and scale live products from scratch. Clean architecture, high speed, and delightful user experiences.
+            Live products and client work — built from scratch with clean code and real users.
           </p>
         </div>
 
@@ -88,27 +90,27 @@ const PortfolioSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.15, ease: [0.22, 1, 0.36, 1] }}
-              className="group block rounded-2xl bg-card/50 border border-border/70 hover:border-primary/40 transition-all duration-500 overflow-hidden glow-border-wrapper hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10 flex flex-col justify-between"
+              className="group block rounded-3xl glass-card backdrop-blur-sm hover:border-primary/40 hover:bg-white/5 transition-all duration-500 overflow-hidden glow-border-wrapper hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/20 flex flex-col justify-between"
             >
               {/* Top Visual Box */}
               <div className={`relative aspect-[16/10] w-full bg-gradient-to-br ${project.gradient} border-b border-border/40 p-6 sm:p-8 flex flex-col justify-between overflow-hidden`}>
                 <div className="flex items-center justify-between z-10">
-                  <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-primary bg-background/90 backdrop-blur-md border border-primary/25 rounded-full px-3 py-1">
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-primary glass-card backdrop-blur-md rounded-full px-3 py-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
                     {project.highlight}
                   </span>
-                  <div className="w-10 h-10 rounded-full bg-background/80 backdrop-blur-md border border-border/60 flex items-center justify-center text-foreground group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-all duration-300 shadow-md">
+                  <div className="w-10 h-10 rounded-full glass-card backdrop-blur-md flex items-center justify-center text-foreground group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-all duration-300 shadow-md">
                     <ArrowUpRight size={18} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                   </div>
                 </div>
 
                 {/* Simulated UI Window Preview */}
                 <div className="relative z-10 my-auto transform group-hover:scale-105 transition-transform duration-500">
-                  <div className="w-full max-w-sm mx-auto bg-background/95 backdrop-blur-xl border border-border/70 rounded-xl shadow-2xl overflow-hidden">
-                    <div className="h-7 border-b border-border/50 flex items-center px-3 gap-1.5 bg-secondary/40">
-                      <div className="w-2.5 h-2.5 rounded-full bg-red-500/40" />
-                      <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/40" />
-                      <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/40" />
+                  <div className="w-full max-w-sm mx-auto glass-card backdrop-blur-xl rounded-xl shadow-2xl overflow-hidden">
+                    <div className="h-7 border-b border-border/50 flex items-center px-3 gap-1.5 bg-secondary/80">
+                      <div className="w-2.5 h-2.5 rounded-full bg-red-400/50" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-yellow-400/50" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-emerald-400/50" />
                       <span className="text-[10px] font-mono text-muted-foreground/70 ml-2">
                         https://{project.domain}/
                       </span>
@@ -148,7 +150,7 @@ const PortfolioSection = () => {
                   {project.tech.map((t) => (
                     <span
                       key={t}
-                      className="text-[10px] font-mono text-muted-foreground/80 bg-secondary/60 border border-border/40 rounded px-2.5 py-1"
+                      className="text-[10px] font-mono text-muted-foreground/80 glass-card rounded px-2.5 py-1"
                     >
                       {t}
                     </span>
@@ -165,18 +167,18 @@ const PortfolioSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="rounded-2xl p-6 sm:p-8 bg-card/40 border border-border/60 backdrop-blur-md"
+          className="rounded-3xl p-6 sm:p-8 glass-card backdrop-blur-md"
         >
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-6 border-b border-border/40">
             <div>
               <span className="text-xs font-mono font-semibold uppercase tracking-wider text-primary flex items-center gap-1.5 mb-1">
-                <Globe2 size={14} /> International Client Deployments
+                <Globe2 size={14} /> International Client Work
               </span>
               <h4 className="text-lg sm:text-xl font-bold text-foreground">
-                High-Impact Web Platforms Shipped for New Zealand Brands
+                Web platforms shipped for New Zealand brands
               </h4>
             </div>
-            <span className="text-xs font-mono text-muted-foreground bg-secondary/60 px-3 py-1.5 rounded-full border border-border/40 shrink-0 self-start md:self-auto">
+            <span className="text-xs font-mono text-muted-foreground bg-secondary/40 px-3 py-1.5 rounded-full border border-border/40 shrink-0 self-start md:self-auto">
               Auckland & Christchurch, NZ
             </span>
           </div>
@@ -188,7 +190,7 @@ const PortfolioSection = () => {
                 href={client.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group p-5 rounded-xl bg-secondary/30 border border-border/50 hover:border-primary/40 hover:bg-secondary/60 transition-all duration-300 flex flex-col justify-between"
+                className="group p-5 rounded-xl bg-secondary/10 border border-border/50 hover:border-primary/40 hover:bg-secondary/30 transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-2">
@@ -196,7 +198,7 @@ const PortfolioSection = () => {
                       <h5 className="font-bold text-base text-foreground group-hover:text-primary transition-colors">
                         {client.name}
                       </h5>
-                      <span className="text-[10px] font-mono text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-2 py-0.5 rounded">
+                      <span className="text-[10px] font-mono text-emerald-400 bg-emerald-400/10 border border-emerald-400/30 px-2 py-0.5 rounded">
                         Live Site
                       </span>
                     </div>

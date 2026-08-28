@@ -2,27 +2,28 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Minus } from "lucide-react";
 import ScrollRevealText from "@/components/ui/ScrollRevealText";
+import FloatingBlobs from "@/components/ui/FloatingBlobs";
 
 const faqs = [
   {
-    question: "Do you only take on large enterprise projects?",
-    answer: "Not at all. We scale our team to fit the scope. Whether it's a fast SaaS MVP for a startup or an end-to-end digital infrastructure migration for an established brand, if it fits our modern tech stack and we believe in the vision, we'll build it.",
+    question: "Do you only work on large enterprise projects?",
+    answer: "Nope. We work with startups, solo founders, and established brands alike. If the project fits our stack and we believe in the vision, we're in — whether it's a quick MVP or a full-scale platform build.",
   },
   {
-    question: "How fast can you deliver a complete MVP?",
-    answer: "Most MVP builds take between 2 to 4 weeks from initial kickoff to production deployment. We work in rapid, transparent 2-day sprint cycles with live staging previews so you see real progress continuously.",
+    question: "How fast can you deliver an MVP?",
+    answer: "Most MVPs ship in 2 to 4 weeks. We work in tight 2-day sprint cycles with live staging previews, so you see real progress every step of the way — no vanishing acts.",
   },
   {
-    question: "What is your pricing model?",
-    answer: "Every project is transparently structured. For well-defined deliverables (like SaaS MVPs and custom websites), we offer clear fixed-price contracts. For ongoing feature development or complex R&D, we offer dedicated monthly retainers. No surprise fees.",
+    question: "How does pricing work?",
+    answer: "We keep it simple. For well-defined projects (MVPs, websites), you get a clear fixed price upfront. For ongoing work, we offer monthly retainers. No hidden fees, no surprise invoices.",
   },
   {
-    question: "Do you handle maintenance and cloud hosting after launch?",
-    answer: "Yes. Shipping is just the beginning. We provide ongoing support retainers to manage AWS/Vercel cloud infrastructure, database scaling, automated backups, security patches, and iterative feature development as your user base grows.",
+    question: "Do you handle hosting and maintenance after launch?",
+    answer: "Absolutely. Launching is just the start. We offer support retainers covering cloud infrastructure, database scaling, security patches, and feature development as your product grows.",
   },
   {
-    question: "Are you limited to clients in a specific timezone?",
-    answer: "No. While based in India, we operate entirely globally and work with founders across the US, UK, Europe, and Asia. We have structured communication routines that ensure smooth collaboration regardless of timezone.",
+    question: "Can you work across different timezones?",
+    answer: "Yes — we already do. We're based in India but work with founders across NZ, the US, UK, and Europe. We've got a communication routine that keeps things smooth regardless of where you are.",
   },
 ];
 
@@ -30,24 +31,25 @@ const FAQSection = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="py-24 lg:py-32 bg-background border-t border-border/40 relative">
+    <section id="faq" className="py-24 lg:py-32 bg-background relative overflow-hidden border-t border-border/40">
+      <FloatingBlobs />
       <div className="container mx-auto px-4 max-w-3xl relative z-10">
         {/* Heading */}
         <div className="text-center mb-16">
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="w-2 h-2 rounded-full bg-primary" />
             <span className="text-primary text-xs font-semibold tracking-widest uppercase">
-              Frequently Asked Questions
+              FAQ
             </span>
           </div>
           <ScrollRevealText
-            text="Everything you need to know."
+            text="Questions? We've got answers."
             className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-4 justify-center"
-            highlightWords={["need", "to", "know."]}
+            highlightWords={["got", "answers."]}
             highlightClass="text-gradient-accent"
           />
           <p className="text-muted-foreground text-base sm:text-lg font-light max-w-md mx-auto">
-            Clear answers to common questions about our process, pricing, and timelines.
+            The stuff people usually ask us about process, pricing, and timelines.
           </p>
         </div>
 
@@ -62,10 +64,10 @@ const FAQSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: index * 0.08 }}
-                className={`border rounded-2xl overflow-hidden transition-all duration-300 ${
+                className={`border rounded-3xl overflow-hidden transition-all duration-300 ${
                   isOpen
-                    ? "border-primary/40 bg-card/90 shadow-xl shadow-primary/5 glow-border-wrapper"
-                    : "border-border/60 bg-card/30 hover:border-border/90 hover:bg-card/60"
+                    ? "border-primary/40 glass-card shadow-xl shadow-primary/5 glow-border-wrapper"
+                    : "border-border/60 bg-transparent hover:border-border/90 hover:bg-white/5"
                 }`}
               >
                 <button
@@ -77,7 +79,7 @@ const FAQSection = () => {
                   </span>
                   <div
                     className={`p-1.5 rounded-full shrink-0 transition-colors duration-300 ${
-                      isOpen ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"
+                      isOpen ? "bg-primary text-primary-foreground" : "bg-secondary/60 text-muted-foreground"
                     }`}
                   >
                     {isOpen ? <Minus size={15} /> : <Plus size={15} />}
