@@ -1,4 +1,5 @@
 import { useRef, useEffect } from "react";
+import { debounce } from "@/hooks/useCanvasVisibility";
 
 interface Blob {
   x: number;
@@ -9,11 +10,18 @@ interface Blob {
   color: string;
 }
 
+// Throttle to ~20fps — blobs move imperceptibly slowly, 60fps is massive overkill
+const TARGET_FPS = 20;
+const FRAME_INTERVAL = 1000 / TARGET_FPS;
+
 export default function FloatingBlobs() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>(0);
   const timeRef = useRef<number>(0);
   const blobsRef = useRef<Blob[]>([]);
+  const dimsRef = useRef({ w: 0, h: 0 });
+  const isVisibleRef = useRef(false);
+  const lastFrameTime = useRef(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -25,21 +33,16 @@ export default function FloatingBlobs() {
       const parent = canvas.parentElement;
       if (!parent) return;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = parent.clientWidth * dpr;
-      canvas.height = parent.clientHeight * dpr;
-      canvas.style.width = `${parent.clientWidth}px`;
-      canvas.style.height = `${parent.clientHeight}px`;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
-
-    resize();
-    window.addEventListener("resize", resize);
-
-    const initBlobs = () => {
-      const parent = canvas.parentElement;
-      if (!parent) return;
       const w = parent.clientWidth;
       const h = parent.clientHeight;
+      dimsRef.current = { w, h };
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      // Re-init blobs on resize
       blobsRef.current = [
         { x: w * 0.2, y: h * 0.3, r: Math.min(w, h) * 0.2, phase: 0, speed: 0.005, color: "rgba(139, 92, 246, 0.08)" },
         { x: w * 0.8, y: h * 0.7, r: Math.min(w, h) * 0.25, phase: Math.PI, speed: 0.004, color: "rgba(236, 72, 153, 0.06)" },
@@ -47,13 +50,24 @@ export default function FloatingBlobs() {
       ];
     };
 
-    initBlobs();
+    resize();
+    const debouncedResize = debounce(resize, 150);
+    window.addEventListener("resize", debouncedResize);
 
-    const animate = () => {
-      const parent = canvas.parentElement;
-      if (!parent) return;
-      const w = parent.clientWidth;
-      const h = parent.clientHeight;
+    // IntersectionObserver — pause when off screen
+    const observer = new IntersectionObserver(
+      ([entry]) => { isVisibleRef.current = entry.isIntersecting; },
+      { rootMargin: "100px" }
+    );
+    observer.observe(canvas);
+
+    const animate = (timestamp: number) => {
+      animationRef.current = requestAnimationFrame(animate);
+      if (!isVisibleRef.current) return;
+      if (timestamp - lastFrameTime.current < FRAME_INTERVAL) return;
+      lastFrameTime.current = timestamp;
+
+      const { w, h } = dimsRef.current;
       ctx.clearRect(0, 0, w, h);
       timeRef.current += 1;
       const t = timeRef.current;
@@ -71,22 +85,22 @@ export default function FloatingBlobs() {
         ctx.arc(b.x + dx, b.y + dy, b.r, 0, Math.PI * 2);
         ctx.fill();
       });
-
-      animationRef.current = requestAnimationFrame(animate);
     };
 
     animationRef.current = requestAnimationFrame(animate);
 
     return () => {
-      window.removeEventListener("resize", resize);
+      window.removeEventListener("resize", debouncedResize);
       cancelAnimationFrame(animationRef.current);
+      observer.disconnect();
     };
   }, []);
 
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-none z-0 mix-blend-screen"
+      // Removed mix-blend-screen — it forces a GPU compositing layer that's expensive
+      className="absolute inset-0 w-full h-full pointer-events-none z-0 opacity-80"
       aria-hidden="true"
     />
   );

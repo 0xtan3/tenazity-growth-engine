@@ -1,4 +1,5 @@
 import { useRef, useEffect } from "react";
+import { debounce } from "@/hooks/useCanvasVisibility";
 
 interface Shape {
   x: number;
@@ -19,6 +20,13 @@ const COLORS = [
   "rgba(6, 182, 212, 0.15)",  // Cyan
 ];
 
+const STROKE_COLORS = [
+  "rgba(139, 92, 246, 0.5)",
+  "rgba(236, 72, 153, 0.5)",
+  "rgba(163, 230, 53, 0.5)",
+  "rgba(6, 182, 212, 0.5)",
+];
+
 function createShape(w: number, h: number): Shape {
   const types: ("circle" | "square" | "triangle")[] = ["circle", "square", "triangle"];
   return {
@@ -34,10 +42,17 @@ function createShape(w: number, h: number): Shape {
   };
 }
 
+// Throttle to ~30fps — shapes move slowly, 60fps is overkill
+const TARGET_FPS = 30;
+const FRAME_INTERVAL = 1000 / TARGET_FPS;
+
 export default function FloatingGeometry() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const shapesRef = useRef<Shape[]>([]);
   const animationRef = useRef<number>(0);
+  const dimsRef = useRef({ w: 0, h: 0 });
+  const isVisibleRef = useRef(false);
+  const lastFrameTime = useRef(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -49,34 +64,47 @@ export default function FloatingGeometry() {
       const parent = canvas.parentElement;
       if (!parent) return;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = parent.clientWidth * dpr;
-      canvas.height = parent.clientHeight * dpr;
-      canvas.style.width = `${parent.clientWidth}px`;
-      canvas.style.height = `${parent.clientHeight}px`;
+      const w = parent.clientWidth;
+      const h = parent.clientHeight;
+      dimsRef.current = { w, h };
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
     resize();
-    window.addEventListener("resize", resize);
+    const debouncedResize = debounce(resize, 150);
+    window.addEventListener("resize", debouncedResize);
 
-    const SHAPE_COUNT = 15;
+    const { w, h } = dimsRef.current;
+    const SHAPE_COUNT = 12; // Reduced from 15
     shapesRef.current = Array.from({ length: SHAPE_COUNT }, () =>
-      createShape(canvas.clientWidth, canvas.clientHeight)
+      createShape(w, h)
     );
 
-    const animate = () => {
-      const parent = canvas.parentElement;
-      if (!parent) return;
-      const w = parent.clientWidth;
-      const h = parent.clientHeight;
+    // IntersectionObserver — pause when off screen
+    const observer = new IntersectionObserver(
+      ([entry]) => { isVisibleRef.current = entry.isIntersecting; },
+      { rootMargin: "100px" }
+    );
+    observer.observe(canvas);
+
+    const animate = (timestamp: number) => {
+      animationRef.current = requestAnimationFrame(animate);
+      if (!isVisibleRef.current) return;
+      if (timestamp - lastFrameTime.current < FRAME_INTERVAL) return;
+      lastFrameTime.current = timestamp;
+
+      const { w, h } = dimsRef.current;
       ctx.clearRect(0, 0, w, h);
 
-      shapesRef.current.forEach((s) => {
+      shapesRef.current.forEach((s, idx) => {
         s.x += s.speedX;
         s.y += s.speedY;
         s.rotation += s.rotSpeed;
 
-        // Bounce off edges
         if (s.x < -s.size) s.x = w + s.size;
         if (s.x > w + s.size) s.x = -s.size;
         if (s.y < -s.size) s.y = h + s.size;
@@ -85,13 +113,10 @@ export default function FloatingGeometry() {
         ctx.save();
         ctx.translate(s.x, s.y);
         ctx.rotate(s.rotation);
-        
-        ctx.strokeStyle = s.color;
-        ctx.lineWidth = 2;
-        
-        // Add a subtle inner glow
-        ctx.shadowColor = s.color.replace('0.15', '0.5');
-        ctx.shadowBlur = 10;
+
+        // Use strokeStyle without shadowBlur — shadowBlur is expensive GPU-side
+        ctx.strokeStyle = STROKE_COLORS[idx % STROKE_COLORS.length];
+        ctx.lineWidth = 1.5;
 
         ctx.beginPath();
         if (s.type === "circle") {
@@ -107,15 +132,14 @@ export default function FloatingGeometry() {
         ctx.stroke();
         ctx.restore();
       });
-
-      animationRef.current = requestAnimationFrame(animate);
     };
 
     animationRef.current = requestAnimationFrame(animate);
 
     return () => {
-      window.removeEventListener("resize", resize);
+      window.removeEventListener("resize", debouncedResize);
       cancelAnimationFrame(animationRef.current);
+      observer.disconnect();
     };
   }, []);
 

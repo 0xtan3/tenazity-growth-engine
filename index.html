@@ -3,81 +3,304 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <!-- Primary Meta Tags -->
-    <title>Tenazity | Premium Freelance Web Development Agency in India</title>
-    <meta name="title" content="Tenazity | Premium Freelance Web Development Agency in India" />
-    <meta name="description" content="Tenazity is a premium digital studio in India specializing in custom web development, SaaS MVPs, and scalable cloud architectures for global clients." />
-    <meta name="keywords" content="freelance digital studio India, custom web development agency India, React developers India, SaaS MVP builders, full-stack developers, cloud architecture" />
+
+    <!-- Preconnect to Google Fonts for faster DNS + TLS handshake -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- ============================================================
+         PRIMARY META TAGS — Keyword-rich title & description
+         Target: web development agency India, SaaS MVP, React, Next.js
+         ============================================================ -->
+    <title>Tenazity | Web App & SaaS Development Agency India — React, Next.js, TypeScript</title>
+    <meta name="title" content="Tenazity | Web App & SaaS Development Agency India — React, Next.js, TypeScript" />
+    <meta
+      name="description"
+      content="Tenazity is India's premium web app & SaaS development studio. We ship custom React/Next.js apps, SaaS MVPs, Figma-to-code, and cloud backends in 2–4 weeks. Trusted by startups in NZ, UK, India & the US."
+    />
+    <meta
+      name="keywords"
+      content="web development agency India, SaaS MVP development India, React developers India, Next.js development agency, custom web app development, full stack developers India, Figma to code India, TypeScript developers India, freelance web development agency, cloud backend development India, SaaS startup development, React Next.js agency, UI UX design development India, web app development company India, hire React developers India, SaaS product development, B2B dashboard development, fintech web development India, startup web development India, web development New Zealand"
+    />
     <meta name="author" content="Tenazity" />
-    <link rel="canonical" href="https://www.tenazity.com" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <link rel="canonical" href="https://www.tenazity.com/" />
 
-    <!-- Open Graph / Facebook -->
+    <!-- ============================================================
+         OPEN GRAPH — Controls how link looks on WhatsApp, LinkedIn, etc.
+         ============================================================ -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://www.tenazity.com" />
-    <meta property="og:title" content="Tenazity | Premium Web Agency in India" />
-    <meta property="og:description" content="We engineer growth through code. Custom web development, SaaS MVPs, and scalable cloud architectures for startups and enterprises across India and globally." />
-    <meta property="og:image" content="https://www.tenazity.com/tenazity-new-logo.jpeg" />
+    <meta property="og:site_name" content="Tenazity" />
+    <meta property="og:locale" content="en_IN" />
+    <meta property="og:url" content="https://www.tenazity.com/" />
+    <meta property="og:title" content="Tenazity | Web App & SaaS Development Agency India" />
+    <meta
+      property="og:description"
+      content="We design and build custom web apps, SaaS MVPs, and React/Next.js products that load fast, look stunning, and scale. 2–4 week delivery. Trusted globally."
+    />
+    <meta property="og:image" content="https://www.tenazity.com/tenazity-og-image.jpeg" />
+    <meta property="og:image:alt" content="Tenazity — Premium Web App & SaaS Development Agency India" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
 
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://www.tenazity.com" />
-    <meta property="twitter:title" content="Tenazity | Premium Web Agency in India" />
-    <meta property="twitter:description" content="We engineer growth through code. Custom web development, SaaS MVPs, and scalable cloud architectures for startups and enterprises across India and globally." />
-    <meta property="twitter:image" content="https://www.tenazity.com/tenazity-new-logo.jpeg" />
+    <!-- ============================================================
+         TWITTER / X CARD
+         ============================================================ -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@tenazity" />
+    <meta name="twitter:creator" content="@tenazity" />
+    <meta name="twitter:url" content="https://www.tenazity.com/" />
+    <meta name="twitter:title" content="Tenazity | Web App & SaaS Development Agency India" />
+    <meta
+      name="twitter:description"
+      content="We build React/Next.js web apps, SaaS MVPs & cloud backends in 2–4 weeks. Senior team. Clean code. Global clients."
+    />
+    <meta name="twitter:image" content="https://www.tenazity.com/tenazity-og-image.jpeg" />
 
-    <!-- JSON-LD Structured Data -->
+    <!-- ============================================================
+         JSON-LD STRUCTURED DATA
+         Multiple schemas: Organization + WebSite + LocalBusiness + Service
+         This is what Google uses for rich results & knowledge panels
+         ============================================================ -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "ProfessionalService",
-        "name": "Tenazity",
-        "image": "https://www.tenazity.com/tenazity-new-logo.jpeg",
-        "@id": "https://www.tenazity.com",
-        "url": "https://www.tenazity.com",
-        "telephone": "",
-        "email": "hello@tenazity.com",
-        "address": {
-          "@type": "PostalAddress",
-          "addressCountry": "IN",
-          "addressRegion": "India"
-        },
-        "areaServed": ["IN", "US", "GB", "AU", "Global"],
-        "priceRange": "$$$",
-        "description": "Tenazity is a premium digital studio based in India, specializing in custom web development, SaaS MVPs, and scalable cloud architectures.",
-        "sameAs": [
-          "https://twitter.com/tenazity",
-          "https://linkedin.com/company/tenazity",
-          "https://github.com/tenazity"
-        ],
-        "makesOffer": [
+        "@graph": [
           {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Custom Web Development"
+            "@type": "Organization",
+            "@id": "https://www.tenazity.com/#organization",
+            "name": "Tenazity",
+            "url": "https://www.tenazity.com/",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://www.tenazity.com/favicon-files/favicon-512x512.png",
+              "width": 512,
+              "height": 512
+            },
+            "image": "https://www.tenazity.com/tenazity-og-image.jpeg",
+            "description": "Tenazity is a premium web app and SaaS development studio based in India. We build custom React and Next.js applications, SaaS MVPs, Figma-to-code products, and scalable cloud backends for startups and enterprises globally.",
+            "email": "hello@tenazity.com",
+            "foundingDate": "2023",
+            "numberOfEmployees": {
+              "@type": "QuantitativeValue",
+              "value": 5
+            },
+            "areaServed": ["IN", "NZ", "US", "GB", "AU", "SG"],
+            "sameAs": [
+              "https://twitter.com/tenazity",
+              "https://linkedin.com/company/tenazity",
+              "https://github.com/tenazity"
+            ],
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "email": "hello@tenazity.com",
+              "contactType": "customer service",
+              "availableLanguage": "English"
             }
           },
           {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "SaaS MVP Building"
+            "@type": "WebSite",
+            "@id": "https://www.tenazity.com/#website",
+            "url": "https://www.tenazity.com/",
+            "name": "Tenazity",
+            "description": "Premium web app & SaaS development agency India",
+            "publisher": {
+              "@id": "https://www.tenazity.com/#organization"
+            },
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://www.tenazity.com/?q={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
             }
           },
           {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "UI/UX Prototyping"
-            }
+            "@type": "ProfessionalService",
+            "@id": "https://www.tenazity.com/#business",
+            "name": "Tenazity — Web App & SaaS Development Agency",
+            "url": "https://www.tenazity.com/",
+            "image": "https://www.tenazity.com/tenazity-og-image.jpeg",
+            "email": "hello@tenazity.com",
+            "priceRange": "$$–$$$",
+            "currenciesAccepted": "USD, INR, AUD, GBP",
+            "paymentAccepted": "Bank Transfer, Stripe",
+            "address": {
+              "@type": "PostalAddress",
+              "addressCountry": "IN",
+              "addressRegion": "India"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": 20.5937,
+              "longitude": 78.9629
+            },
+            "areaServed": [
+              { "@type": "Country", "name": "India" },
+              { "@type": "Country", "name": "New Zealand" },
+              { "@type": "Country", "name": "United States" },
+              { "@type": "Country", "name": "United Kingdom" },
+              { "@type": "Country", "name": "Australia" }
+            ],
+            "hasOfferCatalog": {
+              "@type": "OfferCatalog",
+              "name": "Development Services",
+              "itemListElement": [
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Custom Web App Development",
+                    "description": "Full-stack React and Next.js web application development with TypeScript, clean architecture, and production deployment."
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "SaaS MVP Development",
+                    "description": "End-to-end SaaS product development from Figma design to production deployment in 2–4 weeks."
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "UI/UX Design & Figma Prototyping",
+                    "description": "High-fidelity Figma designs, clickable prototypes, and design systems for web and mobile apps."
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Cloud Backend & API Development",
+                    "description": "Scalable Node.js, Python, and serverless API backends with PostgreSQL, AWS, and Docker."
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Next.js Website Development",
+                    "description": "High-performance marketing websites and landing pages built with Next.js and optimised for Core Web Vitals and SEO."
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "B2B Dashboard & Admin Panel Development",
+                    "description": "Custom B2B SaaS dashboards, CRM portals, and admin panels built with React and TypeScript."
+                  }
+                }
+              ]
+            },
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": "5",
+              "reviewCount": "6",
+              "bestRating": "5",
+              "worstRating": "1"
+            },
+            "review": [
+              {
+                "@type": "Review",
+                "author": { "@type": "Person", "name": "Senthil Kumar" },
+                "reviewRating": { "@type": "Rating", "ratingValue": "5" },
+                "reviewBody": "Tenazity completely transformed our online presence. The new ordering and table booking flow is incredibly fast, and our Google visibility in Auckland jumped within 3 weeks of going live."
+              },
+              {
+                "@type": "Review",
+                "author": { "@type": "Person", "name": "Harish Sharma" },
+                "reviewRating": { "@type": "Rating", "ratingValue": "5" },
+                "reviewBody": "They understood our hospitality brand right away and delivered a beautiful, mobile-first website that handles hundreds of daily reservations without a hitch."
+              },
+              {
+                "@type": "Review",
+                "author": { "@type": "Person", "name": "Karthik Venkatraman" },
+                "reviewRating": { "@type": "Rating", "ratingValue": "5" },
+                "reviewBody": "They scoped our MVP accurately, ran tight sprint updates, and shipped production-ready code in under 3 weeks. They think like technical founders, not just coders."
+              }
+            ]
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://www.tenazity.com/#faq",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "How fast can Tenazity build an MVP?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Most MVPs ship in 2 to 4 weeks. We work in tight 2-day sprint cycles with live staging previews, so you see real progress every step of the way."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Do you work with startups and small businesses?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. We work with startups, solo founders, and established brands alike. Whether it's a quick MVP or a full-scale platform, we're in if we believe in the vision."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What tech stack does Tenazity use?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "We use React, Next.js, TypeScript, Node.js, Python, FastAPI, PostgreSQL, Docker, and AWS. No WordPress hacks or no-code shortcuts."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Do you handle hosting and post-launch maintenance?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Absolutely. We offer support retainers covering cloud infrastructure, database scaling, security patches, and feature development as your product grows."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can Tenazity work across different timezones?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. We're based in India but work with founders across New Zealand, the US, UK, and Europe. We have a communication routine that keeps things smooth regardless of timezone."
+                }
+              }
+            ]
           }
         ]
       }
     </script>
 
-    <meta name="theme-color" content="#0c0d12" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
+    <!-- ============================================================
+         FAVICON — All sizes for Google, browsers, Apple, PWA
+         ============================================================ -->
+    <link rel="icon" type="image/x-icon" href="/favicon-files/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-files/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-files/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-files/favicon-48x48.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/favicon-files/favicon-512x512.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon-files/favicon-180x180.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#8B5CF6" />
+    <meta name="msapplication-TileColor" content="#0A0514" />
+    <meta name="msapplication-TileImage" content="/favicon-files/favicon-512x512.png" />
+
+    <!-- ============================================================
+         NON-RENDER-BLOCKING FONTS
+         ============================================================ -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" />
+    </noscript>
   </head>
 
   <body class="noise-overlay">

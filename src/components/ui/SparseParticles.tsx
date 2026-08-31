@@ -1,4 +1,5 @@
 import { useRef, useEffect } from "react";
+import { debounce } from "@/hooks/useCanvasVisibility";
 
 interface Particle {
   x: number;
@@ -9,10 +10,17 @@ interface Particle {
   opacity: number;
 }
 
+// Throttle to 24fps — particles move very slowly
+const TARGET_FPS = 24;
+const FRAME_INTERVAL = 1000 / TARGET_FPS;
+
 export default function SparseParticles() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>(0);
   const particlesRef = useRef<Particle[]>([]);
+  const dimsRef = useRef({ w: 0, h: 0 });
+  const isVisibleRef = useRef(false);
+  const lastFrameTime = useRef(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -24,37 +32,45 @@ export default function SparseParticles() {
       const parent = canvas.parentElement;
       if (!parent) return;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = parent.clientWidth * dpr;
-      canvas.height = parent.clientHeight * dpr;
-      canvas.style.width = `${parent.clientWidth}px`;
-      canvas.style.height = `${parent.clientHeight}px`;
+      const w = parent.clientWidth;
+      const h = parent.clientHeight;
+      dimsRef.current = { w, h };
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
     resize();
-    window.addEventListener("resize", resize);
+    const debouncedResize = debounce(resize, 150);
+    window.addEventListener("resize", debouncedResize);
 
-    const initParticles = () => {
-      const parent = canvas.parentElement;
-      if (!parent) return;
-      const PARTICLE_COUNT = 25; // Very sparse
-      particlesRef.current = Array.from({ length: PARTICLE_COUNT }, () => ({
-        x: Math.random() * parent.clientWidth,
-        y: Math.random() * parent.clientHeight,
-        size: Math.random() * 2 + 0.5,
-        speedY: (Math.random() - 0.5) * 0.2, // Very slow
-        speedX: (Math.random() - 0.5) * 0.2,
-        opacity: Math.random() * 0.3 + 0.1,
-      }));
-    };
+    const { w, h } = dimsRef.current;
+    const PARTICLE_COUNT = 20; // Reduced from 25 — very sparse
+    particlesRef.current = Array.from({ length: PARTICLE_COUNT }, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      size: Math.random() * 2 + 0.5,
+      speedY: (Math.random() - 0.5) * 0.2,
+      speedX: (Math.random() - 0.5) * 0.2,
+      opacity: Math.random() * 0.3 + 0.1,
+    }));
 
-    initParticles();
+    // IntersectionObserver — pause when off screen
+    const observer = new IntersectionObserver(
+      ([entry]) => { isVisibleRef.current = entry.isIntersecting; },
+      { rootMargin: "100px" }
+    );
+    observer.observe(canvas);
 
-    const animate = () => {
-      const parent = canvas.parentElement;
-      if (!parent) return;
-      const w = parent.clientWidth;
-      const h = parent.clientHeight;
+    const animate = (timestamp: number) => {
+      animationRef.current = requestAnimationFrame(animate);
+      if (!isVisibleRef.current) return;
+      if (timestamp - lastFrameTime.current < FRAME_INTERVAL) return;
+      lastFrameTime.current = timestamp;
+
+      const { w, h } = dimsRef.current;
       ctx.clearRect(0, 0, w, h);
 
       particlesRef.current.forEach((p) => {
@@ -68,18 +84,17 @@ export default function SparseParticles() {
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(139, 92, 246, ${p.opacity})`; // Soft purple
+        ctx.fillStyle = `rgba(139, 92, 246, ${p.opacity})`;
         ctx.fill();
       });
-
-      animationRef.current = requestAnimationFrame(animate);
     };
 
     animationRef.current = requestAnimationFrame(animate);
 
     return () => {
-      window.removeEventListener("resize", resize);
+      window.removeEventListener("resize", debouncedResize);
       cancelAnimationFrame(animationRef.current);
+      observer.disconnect();
     };
   }, []);
 

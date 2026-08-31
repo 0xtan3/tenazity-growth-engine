@@ -1,4 +1,5 @@
 import { useRef, useEffect, useCallback } from "react";
+import { debounce } from "@/hooks/useCanvasVisibility";
 
 interface Spark {
   x: number;
@@ -51,9 +52,15 @@ export default function NeonSparks() {
   const animationRef = useRef<number>(0);
   const mouseRef = useRef({ x: -1000, y: -1000 });
   const frameRef = useRef(0);
+  const dimsRef = useRef({ w: 0, h: 0 });
+  const isVisibleRef = useRef(false);
+  // Throttle mouse events to ~30 checks/sec
+  const lastMouseTime = useRef(0);
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
-    // Only track mouse if within the hero section bounds roughly (or just let it track anywhere)
+    const now = performance.now();
+    if (now - lastMouseTime.current < 33) return; // ~30fps throttle
+    lastMouseTime.current = now;
     mouseRef.current = { x: e.clientX, y: e.clientY };
   }, []);
 
@@ -67,51 +74,66 @@ export default function NeonSparks() {
       const parent = canvas.parentElement;
       if (!parent) return;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = parent.clientWidth * dpr;
-      canvas.height = parent.clientHeight * dpr;
-      canvas.style.width = `${parent.clientWidth}px`;
-      canvas.style.height = `${parent.clientHeight}px`;
+      const w = parent.clientWidth;
+      const h = parent.clientHeight;
+      dimsRef.current = { w, h };
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
     resize();
-    window.addEventListener("resize", resize);
+    const debouncedResize = debounce(resize, 150);
+    window.addEventListener("resize", debouncedResize);
     window.addEventListener("mousemove", handleMouseMove);
 
-    // Initialize particles
-    const PARTICLE_COUNT = 60; // Concentrated for hero section
+    // Initialize particles — reduced from 60 to 35
+    const { w, h } = dimsRef.current;
+    const PARTICLE_COUNT = 35;
     particlesRef.current = Array.from({ length: PARTICLE_COUNT }, () =>
-      createSpark(canvas.clientWidth, canvas.clientHeight)
+      createSpark(w, h)
     );
 
+    // IntersectionObserver — pause when off screen
+    const observer = new IntersectionObserver(
+      ([entry]) => { isVisibleRef.current = entry.isIntersecting; },
+      { rootMargin: "100px" }
+    );
+    observer.observe(canvas);
+
+    // Cache the canvas rect once; refresh on resize
+    let canvasRect = canvas.getBoundingClientRect();
+    const refreshRect = debounce(() => { canvasRect = canvas.getBoundingClientRect(); }, 200);
+    window.addEventListener("resize", refreshRect);
+
     const animate = () => {
-      const parent = canvas.parentElement;
-      if (!parent) return;
-      const w = parent.clientWidth;
-      const h = parent.clientHeight;
+      animationRef.current = requestAnimationFrame(animate);
+      if (!isVisibleRef.current) return; // Pause when off-screen
+
+      const { w, h } = dimsRef.current;
       ctx.clearRect(0, 0, w, h);
       frameRef.current++;
 
-      // Adjust mouse pos relative to canvas parent
-      const rect = canvas.getBoundingClientRect();
-      const mx = mouseRef.current.x - rect.left;
-      const my = mouseRef.current.y - rect.top;
+      // Use cached rect instead of calling getBoundingClientRect every frame
+      const mx = mouseRef.current.x - canvasRect.left;
+      const my = mouseRef.current.y - canvasRect.top;
       const frame = frameRef.current;
 
       particlesRef.current.forEach((p, i) => {
-        // Update position
         p.y += p.speedY;
         p.x = p.baseX + Math.sin(frame * p.driftFreq + p.phase) * p.driftAmplitude;
         p.life++;
 
-        // Mouse repulsion — gentle push
+        // Mouse repulsion
         const dx = p.x - mx;
         const dy = p.y - my;
         const dist = Math.sqrt(dx * dx + dy * dy);
         const repelRadius = 150;
 
         if (dist < repelRadius && dist > 0) {
-          const force = (1 - dist / repelRadius) * 4; // Stronger push for sparks
+          const force = (1 - dist / repelRadius) * 4;
           p.x += (dx / dist) * force;
           p.y += (dy / dist) * force;
         }
@@ -123,40 +145,39 @@ export default function NeonSparks() {
         const flicker = Math.sin(frame * 0.05 + p.phase) * 0.1;
         const currentOpacity = Math.max(0, p.baseOpacity * fadeIn * fadeOut + flicker);
 
-        // Draw outer glow (Neon effect)
+        // Outer glow
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size * 4, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${p.color}, ${currentOpacity * 0.2})`;
         ctx.fill();
 
-        // Draw core particle
+        // Core particle
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${p.color}, ${currentOpacity})`;
         ctx.fill();
 
-        // Draw bright center (White-hot core)
+        // Bright center
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size * 0.4, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(255, 255, 255, ${currentOpacity * 0.8})`;
         ctx.fill();
 
-        // Recycle dead particles
         if (p.life >= p.maxLife || p.y < -30) {
           particlesRef.current[i] = createSpark(w, h);
           particlesRef.current[i].y = h + Math.random() * 40;
         }
       });
-
-      animationRef.current = requestAnimationFrame(animate);
     };
 
     animationRef.current = requestAnimationFrame(animate);
 
     return () => {
-      window.removeEventListener("resize", resize);
+      window.removeEventListener("resize", debouncedResize);
+      window.removeEventListener("resize", refreshRect);
       window.removeEventListener("mousemove", handleMouseMove);
       cancelAnimationFrame(animationRef.current);
+      observer.disconnect();
     };
   }, [handleMouseMove]);
 

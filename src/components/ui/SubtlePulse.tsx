@@ -1,9 +1,17 @@
 import { useRef, useEffect } from "react";
+import { debounce } from "@/hooks/useCanvasVisibility";
+
+// Throttle to 20fps — pulse rings expand extremely slowly
+const TARGET_FPS = 20;
+const FRAME_INTERVAL = 1000 / TARGET_FPS;
 
 export default function SubtlePulse() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>(0);
   const timeRef = useRef<number>(0);
+  const dimsRef = useRef({ w: 0, h: 0 });
+  const isVisibleRef = useRef(false);
+  const lastFrameTime = useRef(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -15,23 +23,36 @@ export default function SubtlePulse() {
       const parent = canvas.parentElement;
       if (!parent) return;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = parent.clientWidth * dpr;
-      canvas.height = parent.clientHeight * dpr;
-      canvas.style.width = `${parent.clientWidth}px`;
-      canvas.style.height = `${parent.clientHeight}px`;
+      const w = parent.clientWidth;
+      const h = parent.clientHeight;
+      dimsRef.current = { w, h };
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
     resize();
-    window.addEventListener("resize", resize);
+    const debouncedResize = debounce(resize, 150);
+    window.addEventListener("resize", debouncedResize);
 
-    const animate = () => {
-      const parent = canvas.parentElement;
-      if (!parent) return;
-      const w = parent.clientWidth;
-      const h = parent.clientHeight;
+    // IntersectionObserver — pause when off screen
+    const observer = new IntersectionObserver(
+      ([entry]) => { isVisibleRef.current = entry.isIntersecting; },
+      { rootMargin: "100px" }
+    );
+    observer.observe(canvas);
+
+    const animate = (timestamp: number) => {
+      animationRef.current = requestAnimationFrame(animate);
+      if (!isVisibleRef.current) return;
+      if (timestamp - lastFrameTime.current < FRAME_INTERVAL) return;
+      lastFrameTime.current = timestamp;
+
+      const { w, h } = dimsRef.current;
       ctx.clearRect(0, 0, w, h);
-      timeRef.current += 0.002; // Very slow pulse
+      timeRef.current += 0.002;
       const t = timeRef.current;
 
       const cx = w / 2;
@@ -42,28 +63,24 @@ export default function SubtlePulse() {
       ctx.lineWidth = 1;
 
       for (let i = 0; i < numRings; i++) {
-        // Offset each ring's phase
         const phase = (i / numRings) + t;
         const normalizedPhase = phase % 1;
-        
         const radius = normalizedPhase * maxRadius;
-        // Fade out as it gets larger
         const opacity = (1 - normalizedPhase) * 0.08;
 
-        ctx.strokeStyle = `rgba(139, 92, 246, ${opacity})`; // Subtle purple
+        ctx.strokeStyle = `rgba(139, 92, 246, ${opacity})`;
         ctx.beginPath();
         ctx.arc(cx, cy, radius, 0, Math.PI * 2);
         ctx.stroke();
       }
-
-      animationRef.current = requestAnimationFrame(animate);
     };
 
     animationRef.current = requestAnimationFrame(animate);
 
     return () => {
-      window.removeEventListener("resize", resize);
+      window.removeEventListener("resize", debouncedResize);
       cancelAnimationFrame(animationRef.current);
+      observer.disconnect();
     };
   }, []);
 
